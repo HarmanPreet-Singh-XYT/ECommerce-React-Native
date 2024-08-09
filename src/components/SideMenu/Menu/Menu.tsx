@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from 'react-native'
-import React, { act } from 'react'
-import { Cross } from '../../NativeSVG'
+import React from 'react'
+import { Cross, Facebook, Instagram, Linkedin, Twitter } from '../../NativeSVG'
 import { useApp } from '../../../helpers/AccountDialog';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -14,7 +14,7 @@ const Menu = () => {
         switch (action) {
             case 'register':
                 toggleSidebar();
-                navigation.navigate('Singup');
+                navigation.navigate('Signup');
                 break;
             case 'login':
                 toggleSidebar();
@@ -37,18 +37,18 @@ const Menu = () => {
         <View className='w-[100%]'>
             <View className='pb-2 w-[100%] border-b-[1px] border-customsalmon flex-row items-center justify-between'>
                 <Text className='text-2xl text-customsalmon font-bold'>Menu</Text>
-                <TouchableOpacity><Cross/></TouchableOpacity>
+                <TouchableOpacity onPress={toggleSidebar}><Cross/></TouchableOpacity>
             </View>
             <View className='py-6 w-[100%] border-b-[1px] border-customsalmon flex-row justify-between'>
-                <TouchableOpacity className='w-[40px] h-[40px] bg-customsalmon rounded-lg items-center justify-center'></TouchableOpacity>
-                <TouchableOpacity className='w-[40px] h-[40px] bg-customsalmon rounded-lg items-center justify-center'></TouchableOpacity>
-                <TouchableOpacity className='w-[40px] h-[40px] bg-customsalmon rounded-lg items-center justify-center'></TouchableOpacity>
-                <TouchableOpacity className='w-[40px] h-[40px] bg-customsalmon rounded-lg items-center justify-center'></TouchableOpacity>
+                <TouchableOpacity className='w-[40px] h-[40px] bg-customsalmon rounded-lg items-center justify-center'><Facebook/></TouchableOpacity>
+                <TouchableOpacity className='w-[40px] h-[40px] bg-customsalmon rounded-lg items-center justify-center'><Twitter/></TouchableOpacity>
+                <TouchableOpacity className='w-[40px] h-[40px] bg-customsalmon rounded-lg items-center justify-center'><Instagram/></TouchableOpacity>
+                <TouchableOpacity className='w-[40px] h-[40px] bg-customsalmon rounded-lg items-center justify-center'><Linkedin/></TouchableOpacity>
             </View>
         </View>
         <View>
             {
-                loggedIn ? <>
+                !loggedIn ? <>
                 <TouchableOpacity onPress={()=>router('register')} className='py-4 w-[100%] border-b-[1px] border-customsalmon'><Text className='text-lg text-[#A9A9A9]'>Register</Text></TouchableOpacity>
                 <TouchableOpacity onPress={()=>router('login')} className='py-4 w-[100%] border-b-[1px] border-customsalmon'><Text className='text-lg text-[#A9A9A9]'>Sign In</Text></TouchableOpacity>
                 </>

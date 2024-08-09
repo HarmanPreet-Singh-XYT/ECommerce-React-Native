@@ -103,6 +103,7 @@ const Product = ({navigation,route}:{navigation:any,route:any}) => {
     const sizeRef = useRef<string>('Default');
     const totalQuantity = useRef<number>(1);
     const found = useRef<boolean>(true);
+    const [VariableSetup, setVariableSetup] = useState(false);
     const [selectedRating, setselectedRating] = useState<number>(1);
     const dataVar = useRef<Product>(defaultData);
     const [selectedReview, setselectedReview] = useState<null|Review>(null)
@@ -160,6 +161,7 @@ const Product = ({navigation,route}:{navigation:any,route:any}) => {
           cartItemData.productColor = data.colors[0].colorname;
           cartItemData.productSize = data.sizes[0].sizename;
         }
+        setVariableSetup(true);
       }
     };
     async function dataInitializer(){
@@ -202,7 +204,8 @@ const Product = ({navigation,route}:{navigation:any,route:any}) => {
     <View className='bg-white h-[100%] w-[100%] border-t-[1px] border-customsalmon'>
       <ScrollView className='w-[100%] h-[100%]'>
       {loading && <ActivityIndicator style={{marginHorizontal:'auto'}} size={254} color={'salmon'}/>}
-        {(dataChecked && data!=undefined) && <><View className='flex-row gap-2 w-[90%] mx-auto my-4'>
+        {(dataChecked && data!=undefined && VariableSetup) && <>
+        <View className='flex-row gap-2 w-[90%] mx-auto my-4'>
           <Text className='text-black font-bold'>{data.categories.maincategory}</Text>
           <Text className='text-black font-bold'>{'>'}</Text>
           <Text className='text-black font-bold'>{data.categories.subcategory}</Text>
