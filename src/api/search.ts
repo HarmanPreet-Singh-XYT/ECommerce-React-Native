@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { sign } from 'react-native-pure-jwt';
 async function encrypt(key:string){
-  const encryptedKey =  await sign({},key,{
-    alg: "HS256"
-  })
+  const encryptedKey =  await sign({Application:'React Native'},key,{
+      alg: "HS256"
+    })
   return encryptedKey
 }
 export default async function searchProductHandler({productName}:{productName:string|string[]}) {

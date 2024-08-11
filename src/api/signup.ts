@@ -1,11 +1,12 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { sign } from 'react-native-pure-jwt';
 // import { cookies } from 'next/headers';
 async function encrypt(key:string){
-    const encryptedKey =  await sign({},key,{
+  const encryptedKey =  await sign({Application:'React Native'},key,{
       alg: "HS256"
     })
-    return encryptedKey
+  return encryptedKey
 }
 interface propForm{
   userName: string;
@@ -24,6 +25,7 @@ export default async function signUpHandler({ userName, email, password, mobile_
     const response = await axios.post(`${url}/api/user/signup/${promotional}`, { userName, email, password, mobile_number, dob }, {
       headers: { authorization:`Bearer ${sendingKey}` },
     });
+    await AsyncStorage.setItem('sessionhold', response.data.token);
     // cookies().set({
     //   name: 'sessionhold',
     //   value: response.data.token,

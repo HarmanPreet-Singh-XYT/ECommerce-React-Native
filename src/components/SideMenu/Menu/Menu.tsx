@@ -5,8 +5,9 @@ import { useApp } from '../../../helpers/AccountDialog';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useMenu } from '../../../helpers/MenuContext';
+import signOutHandler from '../../../api/signout';
 const Menu = () => {
-    const {appState} = useApp();
+    const {appState,setLoggedIn} = useApp();
     const loggedIn = appState.loggedIn;
     const { toggleSidebar } = useMenu();
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
@@ -31,6 +32,10 @@ const Menu = () => {
             default:
                 break;
         }
+    }
+    function signOut(){
+        signOutHandler();
+        setLoggedIn(false);
     }
   return (
     <View className='w-[80%] mx-auto h-[75%] justify-between'>
@@ -60,7 +65,7 @@ const Menu = () => {
             }
         </View>
         <View>
-            {loggedIn && <TouchableOpacity className='w-[100%]'><Text className='text-lg text-[#A9A9A9]'>Sign Out</Text></TouchableOpacity>}
+            {loggedIn && <TouchableOpacity onPress={signOut} className='w-[100%]'><Text className='text-lg text-[#A9A9A9]'>Sign Out</Text></TouchableOpacity>}
         </View>
     </View>
      

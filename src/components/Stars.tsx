@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 interface RatingProps{
     rating:number;
@@ -11,6 +11,8 @@ interface RatingProps{
     gap?:number;
     starType?:1|2;
     count?:number;
+    // editable?:boolean;
+    // setStars?:(stars:number)=>void;
 }
 
 const FullStar = ({width,height,bgColor}:{width:number,height:number,bgColor:string})=>{
@@ -66,6 +68,9 @@ const Rating = ({ rating, bgColor='#363636', starColor='#FFA800',size=24, gap=5,
         .map((_, index) => (
           (starType===1 ? <FullStar key={`empty-${index}`} width={size} height={size} bgColor={bgColor}/> : <FullStar1 key={`empty-${index}`} width={size} height={size} bgColor={bgColor}/>)
         ))}
+        {/* <View style={{flexDirection:'row', zIndex:30,position:'absolute',width:'62%',height:'100%',justifyContent:'center',alignItems:'center'}}>
+          {editable && Array.from({length: (count*2)},(_,index) => <TouchableOpacity style={{width:`${100/(count*2)}%`,height:'100%',marginHorizontal:index%2===0 ? 2 : 0}} key={index} onPress={()=>{setStars!=undefined && setStars(index/2)}}></TouchableOpacity>)}
+        </View> */}
     </View>
   );
 };
@@ -73,6 +78,7 @@ const Rating = ({ rating, bgColor='#363636', starColor='#FFA800',size=24, gap=5,
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    position:'relative'
   },
 });
 

@@ -55,7 +55,7 @@ const { appState } = useApp();
                 <TouchableOpacity onPress={toggleCart}><Cross/></TouchableOpacity>
             </View>
             <ScrollView className='mt-6 w-[100%]'>
-                {cartlist.map((each)=><View key={each.cartItemID} className='flex-row justify-between'>
+                {cartlist.map((each)=><View key={each.cartItemID} className='flex-row justify-between mb-4'>
                     <View>
                         <TouchableOpacity onPress={()=>{toggleCart();navigation.navigate('Product',{productID:each.productID})}} className='border-[1px] border-customsalmon px-1 py-1 rounded-xl'>
                         <Image source={{uri:each.productImg}} alt={each.productAlt} width={75} height={80}/>
@@ -89,7 +89,7 @@ const { appState } = useApp();
                 </View>
                 <Text className='text-customsalmon'>Shipping and taxes are calculated at checkout</Text>
             </View>
-            <TouchableOpacity disabled={loading} className='bg-customsalmon py-3 my-4 rounded-xl'>{loading ? <ActivityIndicator color={'salmon'} size={16}/> : <Text className='font-bold text-white text-center text-lg'>Checkout</Text>}</TouchableOpacity>
+            <TouchableOpacity disabled={loading} className='bg-customsalmon py-3 my-4 rounded-xl'>{loading ? <ActivityIndicator color={'white'} size={24}/> : <Text className='font-bold text-white text-center text-lg'>Checkout</Text>}</TouchableOpacity>
             <View className='flex-row gap-2 justify-center'>
                 <Text>or</Text>
                 <TouchableOpacity onPress={toggleCart}><Text className='text-customsalmon font-bold'>Continue Shopping</Text></TouchableOpacity>

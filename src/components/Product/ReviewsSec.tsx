@@ -3,6 +3,9 @@ import React, { useEffect, useState } from 'react'
 import Rating from '../Stars'
 import { useAppSelector } from '../../hooks';
 import formatDate from '../../api/dateConvert';
+import ConfirmationDialog from '../Dialogs/ConfirmationDialog';
+import { reviewDeleteHandler } from '../../api/reviews';
+import InfoDialog from '../Dialogs/InfoDialog';
 // Interface for individual reviews
 interface Review {
     reviewid: number;
@@ -14,8 +17,8 @@ interface Review {
     createdat:string;
     productstars:number;
 }
-const ReviewsSec = ({data,productID,reviewCount}:{data:Review[],productID:number,reviewCount:number}) => {
-
+const ReviewsSec = ({data,productID,reviewCount,setselectedReview,setdialogType}:{data:Review[],productID:number,reviewCount:number,setselectedReview:React.Dispatch<React.SetStateAction<Review|null>>,setdialogType:React.Dispatch<React.SetStateAction<null|string>>}) => {
+    
     const [one, setone] = useState(0);
     const [two, settwo] = useState(0);
     const [three, setthree] = useState(0);
@@ -74,8 +77,10 @@ const ReviewsSec = ({data,productID,reviewCount}:{data:Review[],productID:number
       Calculate();
 
     }, [data]);
+    
   return (
     <View className='w-[90%] mx-auto mt-6'>
+        
       <Text className='text-black text-xl font-bold text-center mb-4'>Customer Reviews & Rating</Text>
       <View className='mb-4 gap-1'>
         <View className='flex-row items-center justify-between '>
@@ -135,7 +140,7 @@ const ReviewsSec = ({data,productID,reviewCount}:{data:Review[],productID:number
                 </View>
             </View>
             <View className='mt-6'>
-                <TouchableOpacity className='bg-white mb-3 w-[85%] mx-auto rounded-full h-[40px] justify-center'><Text className='text-customsalmon text-lg font-bold text-center'>Write A Review</Text></TouchableOpacity>
+                <TouchableOpacity onPress={()=>setdialogType('writeReview')} className='bg-white mb-3 w-[85%] mx-auto rounded-full h-[40px] justify-center'><Text className='text-customsalmon text-lg font-bold text-center'>Write A Review</Text></TouchableOpacity>
                 <TouchableOpacity className='bg-[#FF9C90] w-[50%] mx-auto rounded-full h-[40px] justify-center'><Text className='text-white font-bold text-center'>See All Reviews</Text></TouchableOpacity>
             </View>
         </View>
@@ -157,7 +162,7 @@ const ReviewsSec = ({data,productID,reviewCount}:{data:Review[],productID:number
                         </Text>
                         <View className='flex-row justify-between mt-4'>
                             {each.userid===defaultAccount.userID && <><TouchableOpacity className='px-6 bg-customsalmon rounded-[10px] py-1'><Text className='font-bold text-md text-white'>Edit Review</Text></TouchableOpacity>
-                            <TouchableOpacity className='px-6 rounded-[10px] border-customsalmon border-[1px] py-1'><Text className='font-bold text-md text-black'>Delete Review</Text></TouchableOpacity></>}
+                            <TouchableOpacity onPress={()=>{setselectedReview(each);setdialogType(null)}} className='px-6 rounded-[10px] border-customsalmon border-[1px] py-1'><Text className='font-bold text-md text-black'>Delete Review</Text></TouchableOpacity></>}
                         </View>
                     </View>)}
                 </View>

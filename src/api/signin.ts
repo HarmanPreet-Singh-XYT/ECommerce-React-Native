@@ -1,8 +1,9 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 // import { cookies } from 'next/headers';
 import { sign } from 'react-native-pure-jwt';
 async function encrypt(key:string){
-    const encryptedKey =  await sign({},key,{
+    const encryptedKey =  await sign({Application:'React Native'},key,{
       alg: "HS256"
     })
     return encryptedKey
@@ -16,6 +17,11 @@ export default async function signInHandler({email,password,remember}:{email:str
     const response = await axios.post(`${url}/api/user/signin/${remember}`, { email, password }, {
       headers: { authorization:`Bearer ${sendingKey}` },
     });
+    try {
+      await AsyncStorage.setItem('sessionhold', response.data.token);
+    } catch (error) {
+      return {status:500};
+    }
     // if(remember){
     //   cookies().set({
     //     name: 'sessionhold',

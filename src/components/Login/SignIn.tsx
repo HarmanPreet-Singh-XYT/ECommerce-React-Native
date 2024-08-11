@@ -1,12 +1,21 @@
-import { View, Text, ScrollView, TouchableOpacity, TextInput } from 'react-native'
+import { View, Text, ScrollView, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
 import { Google } from '../NativeSVG'
 import Checkbox from '../Checkbox'
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types'
+import { Formik } from 'formik'
+import useAuth from '../../controllers/Authentication'
 const SignIn = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
     const [isChecked, setisChecked] = useState(false);
+    const [enabled, setEnabled] = useState(false)
+    const {checkLogin} = useAuth();
+    const [loading, setloading] = useState(false);
+    async function login(e:any,remember:boolean){
+        setloading(true);
+        await checkLogin({email:e.email,password:e.password},remember,setloading);
+    }
     function toggleCheck(){
         setisChecked(!isChecked);
     }
@@ -28,28 +37,37 @@ const SignIn = () => {
             <Text className='text-black text-lg font-medium'>or</Text>
             <View className='w-[45%] h-[1px] bg-customsalmon'></View>
         </View>
-        <View className='w-[90%] mx-auto'>
-            <Text className='text-lg text-black font-semibold'>Email</Text>
-            <TextInput placeholder='Enter your email' placeholderTextColor={'#FFBCB5'} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px] text-white bg-customsalmon rounded-xl mt-4'/>
-            <Text className='text-lg text-black font-semibold mt-6'>Password</Text>
-            <TextInput secureTextEntry={true} placeholder='********' placeholderTextColor={'#FFBCB5'} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px]  text-white bg-customsalmon rounded-xl mt-4'/>
+        <Formik initialValues={{ email: '',password:'' }}
+      onSubmit={values => login(values,isChecked)}>
+        {({ handleChange, handleBlur, handleSubmit, values }) => (
+        <View>
+          <View className='w-[90%] mx-auto'>
+              <Text className='text-lg text-black font-semibold'>Email</Text>
+              <TextInput placeholder='Enter your email' inputMode='email' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('email')} onChangeText={handleChange('email')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px] text-white bg-customsalmon rounded-xl mt-4'/>
+              <Text className='text-lg text-black font-semibold mt-6'>Password</Text>
+              <TextInput secureTextEntry={true} placeholder='********' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('password')} onChangeText={handleChange('password')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px]  text-white bg-customsalmon rounded-xl mt-4'/>
+          </View>
+          <View className='my-8 w-[90%] mx-auto justify-between flex-row items-center'>
+              <View className='flex-row items-center'>
+                  <Checkbox isChecked={isChecked} toggleCheck={toggleCheck}/>
+                  <Text className='text-md font-medium ml-2 text-customsalmon'>Remember me</Text>
+              </View>
+              <View>
+                  <Text className='text-[#FF5C50] underline text-md font-semibold'>Forgot Password?</Text>
+              </View>
+          </View>
+          <TouchableOpacity disabled={loading} onPress={()=>handleSubmit()} className='w-[85%] mx-auto h-[60px] justify-center rounded-2xl bg-customsalmon'>
+              <Text className='text-lg font-semibold text-white text-center'>{loading ? <ActivityIndicator size={32} color={'white'}/> : 'Sign in to your account'}</Text>
+          </TouchableOpacity>
+          <View className='flex-row w-[90%] mx-auto my-8'>
+              <Text className='text-md text-customsalmon mr-2'>Don't have an account yet?</Text>
+              <TouchableOpacity onPress={()=>navigation.navigate('Signup')}><Text className='underline text-md text-[#FF5C50] font-semibold'>Sign up</Text></TouchableOpacity>
+          </View>
         </View>
-        <View className='my-8 w-[90%] mx-auto justify-between flex-row items-center'>
-            <View className='flex-row items-center'>
-                <Checkbox isChecked={isChecked} toggleCheck={toggleCheck}/>
-                <Text className='text-md font-medium ml-2 text-customsalmon'>Remember me</Text>
-            </View>
-            <View>
-                <Text className='text-[#FF5C50] underline text-md font-semibold'>Forgot Password?</Text>
-            </View>
-        </View>
-        <TouchableOpacity className='w-[85%] mx-auto h-[60px] justify-center rounded-2xl bg-customsalmon'>
-            <Text className='text-lg font-semibold text-white text-center'>Sign in to your account</Text>
-        </TouchableOpacity>
-        <View className='flex-row w-[90%] mx-auto my-8'>
-            <Text className='text-md text-customsalmon mr-2'>Don't have an account yet?</Text>
-            <TouchableOpacity onPress={()=>navigation.navigate('Signup')}><Text className='underline text-md text-[#FF5C50] font-semibold'>Sign up</Text></TouchableOpacity>
-        </View>
+        
+        )}
+        </Formik>
+        
       </ScrollView>
     </View>
   )

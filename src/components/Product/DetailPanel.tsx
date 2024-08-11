@@ -2,6 +2,9 @@ import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { SetStateAction } from 'react'
 import { Cart, Globe, Heart, Minus, Plus, Return, Rupee } from '../NativeSVG'
 import Rating from '../Stars'
+import { useApp } from '../../helpers/AccountDialog';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 // Interface for individual reviews
 interface Review {
     reviewid: number;
@@ -61,6 +64,9 @@ interface Review {
     reviews: Review[] | [];
   };
 const DetailPanel = ({data,quantity,actionFunc,handleRef,selectedColor,selectedSize,setSelectedColor,setSelectedSize,btnLoading,itemStateUpdate}:{itemStateUpdate:(action:string)=>void,data:Product,quantity:number,actionFunc:(action:string)=>void,handleRef:any,selectedColor:ProductColor,selectedSize:ProductSize,setSelectedColor:React.Dispatch<SetStateAction<ProductColor>>,setSelectedSize:React.Dispatch<SetStateAction<ProductSize>>,btnLoading:boolean}) => {
+    const {appState} = useApp();
+    const loggedIn = appState.loggedIn;
+    const navigation = useNavigation<NativeStackNavigationProp<any>>();
     function percentageDifference(a:number, b:number) {
         const difference = Math.abs(a - b);
         const average = (a + b) / 2;
@@ -130,7 +136,7 @@ const DetailPanel = ({data,quantity,actionFunc,handleRef,selectedColor,selectedS
             </View>
             <View className='flex-row justify-between my-6'>
                 <TouchableOpacity disabled={btnLoading} onPress={()=>itemStateUpdate('cart')} className='w-[45%] h-[45px] bg-customsalmon items-center justify-center rounded-2xl'><Text className='font-bold text-white text-md'>{btnLoading ? <ActivityIndicator size={32} color={'white'}/> : 'ADD TO CART'}</Text></TouchableOpacity>
-                <TouchableOpacity className='w-[45%] h-[45px] bg-white border-[2px] border-customsalmon items-center justify-center rounded-2xl'><Text className='font-bold text-customsalmon text-md'>BUY NOW</Text></TouchableOpacity>
+                <TouchableOpacity onPress={()=>{loggedIn ? navigation.navigate('Checkout',{productID:data.productid,colorID:selectedColor.colorid,sizeID:selectedSize.sizeid}) : navigation.navigate('Signin')}} className='w-[45%] h-[45px] bg-white border-[2px] border-customsalmon items-center justify-center rounded-2xl'><Text className='font-bold text-customsalmon text-md'>BUY NOW</Text></TouchableOpacity>
             </View>
             <View className='flex-row justify-between pb-6 border-b-[1px] border-customsalmon'>
                 <TouchableOpacity onPress={()=>itemStateUpdate('wishlist')} disabled={btnLoading} className='flex-row items-center'>

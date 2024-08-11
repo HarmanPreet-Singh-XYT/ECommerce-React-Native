@@ -1,11 +1,12 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { sign } from 'react-native-pure-jwt';
 // import { cookies } from 'next/headers';
 async function encrypt(key:string){
-    const encryptedKey =  await sign({},key,{
+  const encryptedKey =  await sign({Application:'React Native'},key,{
       alg: "HS256"
     })
-    return encryptedKey
+  return encryptedKey
 }
 interface Address {
   addressID:number;
@@ -94,28 +95,40 @@ const mapWishlist = (wishlistItem: any): Wishlist => ({
   productName: wishlistItem.title,
   productPrice: wishlistItem.discount,
 });
-// export default async function userParamsHandler() {
-//   const url = process.env.BACKEND_URL;
-//   const authKey = process.env.AUTH_KEY as string;
-//   const cookie = cookies().get('sessionhold');
-//   if(cookie){
-//     const sendingKey = await encrypt(authKey);
-//     try {
-//       const response = await axios.post(`${url}/api/user/all-data`, {userIDToken:cookie.value}, {
-//           headers: { authorization:`Bearer ${sendingKey}` },
-//         });
-//       const data = response.data!;
-//       const addresses: Address[] = data.addresses.map(mapAddress);
-//       const cartItems: CartItem[] = data.cartItems.map(mapCartItem);
-//       const wishlistItems: Wishlist[] = data.wishlistItems.map(mapWishlist);
-//       const userCoupons: UserCoupon[] = data.coupons;
-//       const giftcardsData: GiftCard[] = data.giftcards;
-//       return {status:response.status,data:{addresses:addresses,cartItems:cartItems,wishlistItems:wishlistItems,coupons:userCoupons,giftCards:giftcardsData}}
-//     } catch (error) {
-//       return {status:500,error: 'Internal Server Error' }
-//     }
-//   }else{
-//     return {status:205,error: 'Cookie not found' }
-//   }
+const getData = async () => {
+  try {
+    const value = await AsyncStorage.getItem('sessionhold');
+    if (value !== null) {
+      return value;
+    }else{
+      return false;
+    }
+  } catch (e) {
+    return false;
+  }
+};
+export default async function userParamsHandler() {
+  const url = process.env.BACKEND_URL;
+  const authKey = process.env.AUTH_KEY as string;
+  const cookie = await getData();
+  if(cookie){
+    const sendingKey = await encrypt(authKey);
+    try {
+      const response = await axios.post(`${url}/api/user/all-data`, {userIDToken:cookie}, {
+          headers: { authorization:`Bearer ${sendingKey}` },
+        });
+      const data = response.data!;
+      const addresses: Address[] = data.addresses.map(mapAddress);
+      const cartItems: CartItem[] = data.cartItems.map(mapCartItem);
+      const wishlistItems: Wishlist[] = data.wishlistItems.map(mapWishlist);
+      const userCoupons: UserCoupon[] = data.coupons;
+      const giftcardsData: GiftCard[] = data.giftcards;
+      return {status:response.status,data:{addresses:addresses,cartItems:cartItems,wishlistItems:wishlistItems,coupons:userCoupons,giftCards:giftcardsData}}
+    } catch (error) {
+      return {status:500,error: 'Internal Server Error' }
+    }
+  }else{
+    return {status:205,error: 'Cookie not found' }
+  }
   
-// };
+};
