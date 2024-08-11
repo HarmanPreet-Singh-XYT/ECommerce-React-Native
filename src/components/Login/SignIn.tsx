@@ -52,9 +52,9 @@ const SignIn = () => {
                   <Checkbox isChecked={isChecked} toggleCheck={toggleCheck}/>
                   <Text className='text-md font-medium ml-2 text-customsalmon'>Remember me</Text>
               </View>
-              <View>
+              <TouchableOpacity onPress={()=>navigation.navigate('ResetPassword')}>
                   <Text className='text-[#FF5C50] underline text-md font-semibold'>Forgot Password?</Text>
-              </View>
+              </TouchableOpacity>
           </View>
           <TouchableOpacity disabled={loading} onPress={()=>handleSubmit()} className='w-[85%] mx-auto h-[60px] justify-center rounded-2xl bg-customsalmon'>
               <Text className='text-lg font-semibold text-white text-center'>{loading ? <ActivityIndicator size={32} color={'white'}/> : 'Sign in to your account'}</Text>

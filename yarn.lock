@@ -4954,6 +4954,11 @@ react-native-dotenv@^3.4.11:
   dependencies:
     dotenv "^16.4.5"
 
+react-native-otp-entry@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.npmjs.org/react-native-otp-entry/-/react-native-otp-entry-1.7.1.tgz"
+  integrity sha512-ZZErm8R0eww0lQu/D2KZuMbio4k3bBfijS8sgBvlsDTyREOH6edZZ4ingtLR1sqvKpoylhunR2NbcWLrV/ekBA==
+
 react-native-pure-jwt@^3.0.2:
   version "3.0.2"
   resolved "https://registry.npmjs.org/react-native-pure-jwt/-/react-native-pure-jwt-3.0.2.tgz"
