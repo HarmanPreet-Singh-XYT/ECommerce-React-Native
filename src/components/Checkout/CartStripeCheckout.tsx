@@ -1,10 +1,10 @@
 import { useStripe } from "@stripe/stripe-react-native";
 import { useState, useEffect } from "react";
 import {  View, TouchableOpacity, Text } from "react-native";
-import paymentGatewayHandler, { cardCheckoutHandler } from "../../api/paymentSystem";
+import { cardCheckoutHandler, cartCardCheckoutHandler, paymentGatewayCartHandler } from "../../api/paymentSystem";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
-export default function CheckoutScreen({customerName,email,contactNumber,userID,productID,colorID,sizeID}:{productID:number,customerName:string,email:string,contactNumber:number,clientSecret:string,userID:number,colorID:number,sizeID:number}) {
+export default function CartStripeCheckout({customerName,email,contactNumber,userID}:{customerName:string,email:string,contactNumber:number,userID:number}) {
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const customAppearance = {
     shapes: {
@@ -28,26 +28,26 @@ export default function CheckoutScreen({customerName,email,contactNumber,userID,
       placeholderText: '#73757b',
     },
    };
+    async function createOrder(paymentid:string,paymentStatus:string){
+        setLoading(true);
+        const createOrder = await cartCardCheckoutHandler(userID,paymentid,paymentStatus)
+        switch (createOrder.status) {
+            case 200:
+                setLoading(false);
+                navigation.navigate('Confirmation',{orderID:'Cart',statusCode:200});
+                break;
+            default:
+                navigation.navigate('Confirmation',{orderID:'Cart',statusCode:400});
+                break;
+        }
+      }
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [loading, setLoading] = useState(false);
-  async function createOrder(paymentid:string,paymentStatus:string){
-    setLoading(true);
-    const createOrder = await cardCheckoutHandler({userid:userID,productid:productID.toString(),colorid:colorID.toString(),sizeid:sizeID.toString(),paymentid,paymentStatus})
-    switch (createOrder.status) {
-      case 200:
-          setLoading(false);
-          navigation.navigate('Confirmation',{orderID:createOrder.data.orderid,statusCode:200});
-          break;
-      default:
-          navigation.navigate('Confirmation',{orderID:createOrder.data.orderid,statusCode:400});
-          break;
-  }
-  }
   const fetchPaymentSheetParams = async () => {
     async function paymentGateway(userID:number){
-    const Client = await paymentGatewayHandler(productID.toString(),userID)
-    return Client.clientSecret;
-  };
+        const ClientS = await paymentGatewayCartHandler(userID);
+        return ClientS.clientSecret;
+    }
     const paymentIntent = await paymentGateway(userID);
 
     return {
@@ -84,7 +84,7 @@ export default function CheckoutScreen({customerName,email,contactNumber,userID,
     if (error) {
       navigation.navigate('Confirmation',{orderID:0,statusCode:400});
     } else {
-      const randomNum:any = Math.random;
+        const randomNum:any = Math.random;
       createOrder(`${(Math.round(randomNum*100))}`,'Succeeded');
     }
   };

@@ -89,7 +89,7 @@ const { appState } = useApp();
                 </View>
                 <Text className='text-customsalmon'>Shipping and taxes are calculated at checkout</Text>
             </View>
-            <TouchableOpacity disabled={loading} className='bg-customsalmon py-3 my-4 rounded-xl'>{loading ? <ActivityIndicator color={'white'} size={24}/> : <Text className='font-bold text-white text-center text-lg'>Checkout</Text>}</TouchableOpacity>
+            <TouchableOpacity onPress={()=>isLogged ? navigation.navigate('CartCheckout') : navigation.navigate('Signin')} disabled={loading} className='bg-customsalmon py-3 my-4 rounded-xl'>{loading ? <ActivityIndicator color={'white'} size={24}/> : <Text className='font-bold text-white text-center text-lg'>Checkout</Text>}</TouchableOpacity>
             <View className='flex-row gap-2 justify-center'>
                 <Text>or</Text>
                 <TouchableOpacity onPress={toggleCart}><Text className='text-customsalmon font-bold'>Continue Shopping</Text></TouchableOpacity>

@@ -4,6 +4,8 @@ import { Cart } from '../NativeSVG'
 import BottomBar from '../BottomBar'
 import { ordersHandler } from '../../api/orders'
 import formatDate from '../../api/dateConvert'
+import { useNavigation } from '@react-navigation/native'
+import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 interface orderDataflow{
     orderid:number;
     totalamount:number;
@@ -19,6 +21,7 @@ interface orderDataflow{
     productid:string
 }
 const Orders = () => {
+    const navigation = useNavigation<NativeStackNavigationProp<any>>();
     const [menu, setmenu] = useState<null | number>(null);
     const loggedIn = useRef(true);
     const found = useRef(false);
@@ -71,11 +74,11 @@ const Orders = () => {
                     </View>
                 </View>
                 <View className='w-[100%] h-[50%] items-center justify-between border-t-[1px] px-4 border-customsalmon flex-row'>
-                    <View className='border-customsalmon border-[1px] rounded-2xl px-1 py-1'>
+                    <TouchableOpacity onPress={()=>navigation.navigate('Product',{productID:each.productid})} className='border-customsalmon border-[1px] rounded-2xl px-1 py-1'>
                         <Image source={{uri:each.imglink}} alt={each.imgalt} width={160} height={120}/>
-                    </View>
+                    </TouchableOpacity>
                     <View className='justify-between h-[65%] w-[45%]'>
-                        <Text className='font-bold text-black w-[100%]'>{each.title}</Text>
+                        <TouchableOpacity onPress={()=>navigation.navigate('Product',{productID:each.productid})}><Text className='font-bold text-black w-[100%]'>{each.title}</Text></TouchableOpacity>
                         <View>
                             <Text className='font-bold text-[12px] text-black'>Order Placed on:</Text>
                             <Text className='font-bold text-customsalmon'>{formatDate(each.createdat)}</Text>
@@ -91,7 +94,7 @@ const Orders = () => {
                     <View className='w-[100%] h-[50%] justify-between flex-row'>
                         <TouchableOpacity className='bg-customsalmon h-full w-[50%] justify-center rounded-bl-2xl'><Text className='text-lg font-bold text-white text-center'>View Order</Text></TouchableOpacity>
                         <View className='w-[1px] h-[100%] bg-white'></View>
-                        <TouchableOpacity className='bg-customsalmon h-full w-[50%] justify-center rounded-br-2xl'><Text className='text-lg font-bold text-white text-center'>Buy again</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={()=>navigation.navigate('Product',{productID:each.productid})} className='bg-customsalmon h-full w-[50%] justify-center rounded-br-2xl'><Text className='text-lg font-bold text-white text-center'>Buy again</Text></TouchableOpacity>
                     </View>
                 </View>
             </View>)}

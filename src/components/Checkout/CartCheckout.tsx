@@ -1,11 +1,11 @@
 import { View, Text, ScrollView, TextInput, TouchableOpacity, Image } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { useAppSelector } from '../../hooks';
-import paymentGatewayHandler, { checkoutProductDataHandler, paymentOnDeliveryHandler } from '../../api/paymentSystem';
+import { cartCashCheckoutHandler, checkoutCartProductDataHandler, paymentOnDeliveryHandler } from '../../api/paymentSystem';
 import Rating from '../Stars';
 import Loading from '../Dialogs/Loading';
 import { StripeProvider } from '@stripe/stripe-react-native';
-import CheckoutScreen from './StripeCheckout';
+import CartStripeCheckout from './CartStripeCheckout';
 interface Address {
     addressID:number;
     addressType:string;
@@ -28,18 +28,9 @@ interface ProductDetails {
     imglink: string;
     imgalt: string;
     shippingcost: number;
-};
-const emptyProductDetails: ProductDetails = {
-    title: '',
-    price: '0',
-    discount: '0',
-    sizename: '',
-    colorname: '',
-    imglink: 'https://img.freepik.com/free-vector/ecommerce-web-page-concept-illustration_114360-8204.jpg',
-    imgalt: '',
-    shippingcost:0
-};
-const ProductCheckout = ({navigation,route}:{navigation:any,route:any}) => {
+    quantity:number;
+}
+const CartCheckout = ({navigation,route}:{navigation:any,route:any}) => {
     const Stripe_PUBLISHABLE_KEY = process.env.STRIPE_PUBLISHABLE_KEY as string;
     const MERCHANT_ID = process.env.STRIPE_ID as string;
     const [NoDefaultAdd, setNoDefaultAdd] = useState(false);
@@ -47,17 +38,18 @@ const ProductCheckout = ({navigation,route}:{navigation:any,route:any}) => {
     const addresses = useAppSelector((state) => state.userState.addresses);
     const [PaymentMethod, setPaymentMethod] = useState<'cash'|'card'>('card');
     const [clientSecret, setClientSecret] = useState("");
-    const dataVar = useRef<ProductDetails>(emptyProductDetails);
+    const dataVar = useRef<ProductDetails[]>([]);
     const data = dataVar.current;
     const [paymentCharge, setPaymentCharge] = useState(0);
     const found = useRef(false);
     const [loading, setloading] = useState(true);
-    const shipping = data.shippingcost;
-    const taxes = (parseFloat(data.price) * (18 / 100));
-    const subTotal = parseFloat(data.price);
-    const subTotalWithoutTax = (parseFloat(data.price)-(parseFloat(data.price)*18/100));
-    const discount = parseFloat(data.price) - parseFloat(data.discount);
-    const totalAmount = (subTotal + shipping + paymentCharge)-discount;
+    const shipping = data.reduce((sum, item) => (sum + item.shippingcost)*item.quantity, 0);
+    const taxes = data.reduce((sum, item) => sum + (parseFloat(item.price) * (18 / 100))*item.quantity, 0);
+    const subTotal = data.reduce((sum, item) => sum + parseFloat(item.price)*item.quantity, 0);
+    const subTotalWithoutTax = data.reduce((sum, item) => sum + (parseFloat(item.price)-(parseFloat(item.price)*18/100))*item.quantity, 0);
+    const discount = data.reduce((sum, item) => sum + (parseFloat(item.price) - parseFloat(item.discount))*item.quantity, 0);
+    const totalAmount = subTotal + paymentCharge - discount + shipping;
+
     const formattedSubTotal = subTotalWithoutTax.toFixed(2);
     const formattedShipping = shipping.toFixed(2);
     const formattedTaxes = taxes.toFixed(2);
@@ -86,33 +78,27 @@ const ProductCheckout = ({navigation,route}:{navigation:any,route:any}) => {
         sync();
     });
     async function dataRequest(){
-        
-        const response = await checkoutProductDataHandler({productID:route.params.productID,colorID:route.params.colorID,sizeID:route.params.sizeID});
+        const response = await checkoutCartProductDataHandler(defaultAccount.userID);
         switch (response.status) {
-          case 200:
-          dataVar.current = response.data;
-          found.current = true;
-          break;
-          case 500:
+            case 200:
+            dataVar.current = response.data.products;
+            found.current = true;
+            break;
+            case 500:
             navigation.navigate('Home');
             break;
         default:
             navigation.navigate('Home');
             break;
-          }
+            }
     };
-    // async function paymentGateway(userID:number){
-    //     await paymentGatewayHandler(route.params.productID,userID)
-    //     .then((res)=>setClientSecret(res.clientSecret))
-    // };
     async function sync(){
         await dataRequest();
-        // await paymentGateway(defaultAccount.userID);
         setloading(false);
     };
     async function createOrder(){
         setloading(true);
-        const createOrder = await paymentOnDeliveryHandler({userid:defaultAccount.userID,productid:route.params.productID,colorid:route.params.colorID,sizeid:route.params.sizeID})
+        const createOrder = await cartCashCheckoutHandler(defaultAccount.userID);
         switch (createOrder.status) {
             case 200:
                 setloading(false);
@@ -174,25 +160,25 @@ const ProductCheckout = ({navigation,route}:{navigation:any,route:any}) => {
         </View>
         <View>
             <View className='w-[90%] mx-auto mb-4 mt-4'>
-                <Text className='text-black text-xl font-bold'>Product</Text>
+                <Text className='text-black text-xl font-bold'>Products</Text>
             </View>
         </View>
-        <View className='w-[90%] px-2 py-2 flex-row self-center border-[1px] items-center justify-between h-[150px] border-customsalmon rounded-xl mb-4'>
+        {dataVar.current.map((each,index)=><View key={index} className='w-[90%] px-2 py-2 flex-row self-center border-[1px] items-center justify-between h-[150px] border-customsalmon rounded-xl mb-4'>
             <View className='border-[1px] border-customsalmon rounded-xl px-2 py-1'>
-                <Image source={{uri:data.imglink}} alt={data.imgalt} width={120} height={120}/>
+                <Image source={{uri:each.imglink}} alt={each.imgalt} width={120} height={120}/>
             </View>
             <View className='w-[60%] gap-1'>
-                <Text className='text-customsalmon font-bold'>{data.title}</Text>
-                <Text className='font-bold text-black'>Size: <Text className='font-medium text-customsalmon'>{data.sizename}</Text></Text>
-                <Text className='font-bold text-black'>Color: <Text className='font-medium text-customsalmon'>{data.colorname}</Text></Text>
+                <Text className='text-customsalmon font-bold'>{each.title}</Text>
+                <Text className='font-bold text-black'>Size: <Text className='font-medium text-customsalmon'>{each.sizename}</Text></Text>
+                <Text className='font-bold text-black'>Color: <Text className='font-medium text-customsalmon'>{each.colorname}</Text></Text>
                 <Text className='font-bold text-black'>Quantity: <Text className='font-medium text-customsalmon'>1</Text></Text>
                 <View className='flex-row justify-between items-center'>
-                    <Rating rating={4} size={16}/>
-                    <Text className='font-bold line-through text-black'>${data.price}</Text>
-                    <Text className='font-bold text-lg text-black'>${data.discount}</Text>
+                    <Rating rating={5} size={16}/>
+                    <Text className='font-bold line-through text-black'>${each.price}</Text>
+                    <Text className='font-bold text-lg text-black'>${each.discount}</Text>
                 </View>
             </View>
-        </View>
+        </View>)}
         <View>
             <View className='mx-auto mb-4 mt-4'>
                 <Text className='text-black text-center text-xl font-bold'>Summary</Text>
@@ -210,7 +196,7 @@ const ProductCheckout = ({navigation,route}:{navigation:any,route:any}) => {
                         <Text className='font-bold text-lg text-salmon'>${formattedShipping}</Text>
                     </View>
                 </View>
-                {paymentCharge>0 &&
+                {paymentCharge > 0 &&
                 <View className='py-3 w-[100%] items-center border-b-[1px] border-customsalmon'>
                     <View className='w-[90%] justify-between flex-row'>
                         <Text className='font-semibold text-lg text-black'>Payment Processing fee</Text>
@@ -247,7 +233,7 @@ const ProductCheckout = ({navigation,route}:{navigation:any,route:any}) => {
             publishableKey={Stripe_PUBLISHABLE_KEY}
             merchantIdentifier={MERCHANT_ID}
              >
-                <CheckoutScreen productID={route.params.productID} colorID={route.params.colorID} sizeID={route.params.sizeID} clientSecret={clientSecret} userID={defaultAccount.userID} customerName={defaultAccount.userName} email={defaultAccount.email} contactNumber={defaultAccount.mobile_number}/>
+                <CartStripeCheckout userID={defaultAccount.userID} customerName={defaultAccount.userName} email={defaultAccount.email} contactNumber={defaultAccount.mobile_number}/>
             </StripeProvider>
             </View>
         </View>}
@@ -258,5 +244,5 @@ const ProductCheckout = ({navigation,route}:{navigation:any,route:any}) => {
   )
 }
 
-export default ProductCheckout
+export default CartCheckout
 
