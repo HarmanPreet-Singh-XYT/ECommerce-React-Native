@@ -148,8 +148,8 @@ const ReviewsSec = ({data,productID,reviewCount,setselectedReview,setdialogType}
             <Text className='text-xl text-black font-bold mb-4'>Recent Reviews</Text>
             <View>
                 <View className='border-[1px] border-customsalmon rounded-xl'>
-                    {data.map((each)=><View className='w-[92%] mx-auto py-4'>
-                        <View key={each.reviewid} className='flex-row justify-between items-center'>
+                    {data.map((each)=><View key={each.reviewid} className='w-[92%] mx-auto py-4'>
+                        <View className='flex-row justify-between items-center'>
                             <Text className='text-lg text-black font-bold'>@{each.username}</Text>
                             <Rating rating={each.productstars} size={16}/>
                         </View>

@@ -14,6 +14,8 @@ import AccountSettings from './components/AccountSettings/AccountSettings';
 import Orders from './components/Orders/Orders';
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 import ForgotPassword from './components/Login/ForgotPassword';
+import ProductCheckout from './components/Checkout/ProductCheckout';
+import Confirmation from './components/Confirmation/Confirmation';
 const Stack = createNativeStackNavigator();
 interface Params {
   params:{productID:string};
@@ -54,6 +56,16 @@ const App = () => {
               <Stack.Screen name="ResetPassword" component={ForgotPassword} options={{
                 headerLeft:()=><BackBtn/>,
                 headerTitle:'Reset',
+              }}/>
+              <Stack.Screen name="Checkout" component={ProductCheckout} options={{
+                headerTitle:'Checkout',
+                headerTitleAlign:'center',
+                headerBackVisible:false
+              }}/>
+              <Stack.Screen name="Confirmation" component={Confirmation} options={{
+                headerTitle:'Order Confirmation',
+                headerTitleAlign:'center',
+                headerBackVisible:false
               }}/>
             </Stack.Navigator>
           </NavigationContainer>

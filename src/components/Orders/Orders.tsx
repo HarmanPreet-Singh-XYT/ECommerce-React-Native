@@ -58,7 +58,7 @@ const Orders = () => {
                 <Text className='text-black text-xl font-bold'>Order history</Text>
             </View>
             {data.map((each)=>
-            <View key={each.orderid} className='border-[1px] border-customsalmon h-[380px] w-[90%] mx-auto rounded-2xl'>
+            <View key={each.orderid} className='border-[1px] border-customsalmon mb-2 h-[380px] w-[90%] mx-auto rounded-2xl'>
                 <View className='flex-row justify-between h-[20%]'>
                     <View className='items-center h-[100%] w-[50%] justify-center'>
                             <Text className='text-black font-bold'>Order Number</Text>
@@ -72,7 +72,7 @@ const Orders = () => {
                 </View>
                 <View className='w-[100%] h-[50%] items-center justify-between border-t-[1px] px-4 border-customsalmon flex-row'>
                     <View className='border-customsalmon border-[1px] rounded-2xl px-1 py-1'>
-                        <Image source={{uri:'https://codewithsadee.github.io/anon-ecommerce-website/assets/images/products/shirt-2.jpg'}} width={160} height={120}/>
+                        <Image source={{uri:each.imglink}} alt={each.imgalt} width={160} height={120}/>
                     </View>
                     <View className='justify-between h-[65%] w-[45%]'>
                         <Text className='font-bold text-black w-[100%]'>{each.title}</Text>
