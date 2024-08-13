@@ -312,7 +312,7 @@ const Product = ({navigation,route}:{navigation:any,route:any}) => {
   return (
     <View className='bg-white h-[100%] w-[100%] border-t-[1px] border-customsalmon'>
       {dialogType==='writeReview' && <WriteReview selectedReview={selectedReview} setstars={setstars} stars={stars} title='Write a Review' message='Share your Thoughts' btn1='Cancel' btn2='Submit' btn1Func={cancelPopup} btn2Func={createForm}/>}
-      {dialogType==='editReview' && <WriteReview selectedReview={selectedReview} setstars={setstars} stars={stars} title='Edit your Review' message='Share your Thoughts' btn1='Cancel' btn2='Submit' btn1Func={cancelPopup} btn2Func={editForm}/>}
+      {dialogType==='editReview' && <WriteReview isEdit={true} selectedReview={selectedReview} setstars={setstars} stars={stars} title='Edit your Review' message='Share your Thoughts' btn1='Cancel' btn2='Submit' btn1Func={cancelPopup} btn2Func={editForm}/>}
       {(processLoading || loading) && <Loading/>}
       {dialogType==='deletePopup' && <ConfirmationDialog title='Confirmation' message='Are you sure, you want to delete the Review?' btn1='Cancel' btn2='Delete' btn1Func={cancelPopup} btn2Func={delReviewPopup}/>}
       {InfoType==='error' && <InfoDialog title='Server Error' message='We are currently facing downtime, please try again lator.' btn='Close' btnFunc={toggleInfo}/>}

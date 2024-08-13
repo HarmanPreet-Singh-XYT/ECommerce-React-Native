@@ -94,7 +94,7 @@ const DetailPanel = ({data,quantity,actionFunc,handleRef,selectedColor,selectedS
                 <View className='flex-row items-center mb-4'>
                     <Text className='text-black font-medium mr-2'>{data.stars}</Text>
                     <Rating rating={data.stars} size={20} starType={1} count={5}/>
-                    <TouchableOpacity onPress={handleRef}><Text className='text-customsalmon font-medium ml-2'>{data.reviewcount} Reviews</Text></TouchableOpacity>
+                    <TouchableOpacity><Text className='text-customsalmon font-medium ml-2'>{data.reviewcount} Reviews</Text></TouchableOpacity>
                 </View>
             </View>
             <View className='flex-row items-center gap-6'>

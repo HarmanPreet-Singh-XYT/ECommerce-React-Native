@@ -10,10 +10,10 @@ async function encrypt(key:string){
 }
 const url = process.env.BACKEND_URL;
 const authKey = process.env.AUTH_KEY as string;
-export default async function authDataHandler(code:string) {
+export default async function authDataHandler(email:string) {
   const sendingKey = await encrypt(authKey);
   try {
-    const response = await axios.post(`${url}/api/auth/google`,{code},{
+    const response = await axios.post(`${url}/api/native/auth/google`,{email},{
         headers: { authorization:`Bearer ${sendingKey}` },
     });
     await AsyncStorage.setItem('sessionhold', response.data.token);
@@ -26,6 +26,7 @@ export default async function authDataHandler(code:string) {
     // })
     return {status:response.status,data:response.data}
   } catch (error) {
+    console.log(error)
     return {status:500,error: 'Internal Server Error' }
   }
 };

@@ -11,7 +11,7 @@ const ConfirmationDialog = ({title,message,btn1,btn2,message2,message3,btn1Func,
         reducedTransparencyFallbackColor="white"
       />
       <View style={{position:'absolute',left:0,right:0,top:0,bottom:0,justifyContent:'center',alignItems:'center',zIndex:10}}>
-        <View className='bg-customsalmon w-[90%] rounded-2xl h-[165px] items-center justify-evenly'>
+        <View className='bg-customsalmon w-[90%] rounded-2xl h-[165px] py-4 items-center justify-evenly'>
           <View className='items-center mb-2 w-[90%] mx-auto'>
             <Text className='text-xl font-bold text-white mb-2'>{title}</Text>
             <Text className='text-lg font-semibold text-white'>{message}</Text>

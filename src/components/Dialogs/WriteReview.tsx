@@ -72,7 +72,7 @@ const WriteReview = ({title,message,btn1,btn2,message2,message3,btn1Func,btn2Fun
         </View>
         )}
         </Formik>}
-        {(isEdit && selectedReview) && <Formik initialValues={{title:'',description:'',}}
+        {(isEdit && selectedReview) && <Formik initialValues={{title:selectedReview.title,description:selectedReview.comment,}}
           onSubmit={values => {btn1Func();btn2Func(values)}}>
           {({ handleChange, handleBlur, handleSubmit, values }) => (
         <View className='bg-white border-[1px] border-customsalmon w-[90%] rounded-2xl h-auto py-4 items-center justify-evenly'>

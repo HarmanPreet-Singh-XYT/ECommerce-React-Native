@@ -6,11 +6,15 @@ import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types'
 import { Formik } from 'formik'
 import useAuth from '../../controllers/Authentication'
+import { GoogleSignin,statusCodes } from '@react-native-google-signin/google-signin';
 const SignIn = () => {
+  const clientID = process.env.FRONTEND_GOOGLE_CLIENT_ID as string;
+  GoogleSignin.configure();
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
     const [isChecked, setisChecked] = useState(false);
     const [enabled, setEnabled] = useState(false)
-    const {checkLogin} = useAuth();
+    const {checkLogin, checkAuthLogin} = useAuth();
+    const [State, setState] = useState<any>({});
     const [loading, setloading] = useState(false);
     async function login(e:any,remember:boolean){
         setloading(true);
@@ -18,7 +22,46 @@ const SignIn = () => {
     }
     function toggleCheck(){
         setisChecked(!isChecked);
-    }
+    };
+    const responseGoogle = async (authResult:any) => {
+      try {
+          await checkAuthLogin(authResult.email,setloading);
+      } catch (e) {
+              setloading(false)
+      }
+    };
+  
+    // const googleLogin = useGoogleLogin({
+    //   onSuccess: responseGoogle,
+    //   onError: responseGoogle,
+    //   flow: "auth-code",
+    // });
+    const _signIn = async () => {
+      try {
+        await GoogleSignin.hasPlayServices();
+        const userInfo = await GoogleSignin.signIn();
+        setState({ userInfo, error: undefined });
+        responseGoogle(userInfo.user);
+      } catch (error) {
+        if (error) {
+          switch (error) {
+            case statusCodes.SIGN_IN_CANCELLED:
+              // user cancelled the login flow
+              break;
+            case statusCodes.IN_PROGRESS:
+              // operation (eg. sign in) already in progress
+              break;
+            case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+              // play services not available or outdated
+              break;
+            default:
+            // some other error happened
+          }
+        } else {
+          // an error that's not related to google sign in occurred
+        }
+      }
+    };
   return (
     <View className='bg-white h-[100%] w-[100%] border-t-[1px] border-customsalmon'>
       <ScrollView className='w-[100%] h-[100%]'>
@@ -28,10 +71,11 @@ const SignIn = () => {
         <View className='flex-row gap-2 w-[90%] mx-auto mb-4 mt-2'>
           <Text className='text-black text-xl font-bold'>Sign in With</Text>
         </View>
-        <TouchableOpacity className='flex-row mx-auto w-[250px] mt-2 h-[50px] border-[1px] rounded-xl border-customsalmon justify-center items-center'>
+        <TouchableOpacity onPress={()=>_signIn()} className='flex-row mx-auto w-[250px] mt-2 h-[50px] border-[1px] rounded-xl border-customsalmon justify-center items-center'>
             <Google/>
             <Text className='text-lg ml-2 font-semibold text-black text-center'>Google</Text>
         </TouchableOpacity>
+        
         <View className='w-[90%] mx-auto flex-row items-center justify-between my-4'>
             <View className='w-[45%] h-[1px] bg-customsalmon'></View>
             <Text className='text-black text-lg font-medium'>or</Text>
@@ -57,7 +101,7 @@ const SignIn = () => {
               </TouchableOpacity>
           </View>
           <TouchableOpacity disabled={loading} onPress={()=>handleSubmit()} className='w-[85%] mx-auto h-[60px] justify-center rounded-2xl bg-customsalmon'>
-              <Text className='text-lg font-semibold text-white text-center'>{loading ? <ActivityIndicator size={32} color={'white'}/> : 'Sign in to your account'}</Text>
+              <Text className='text-lg font-semibold text-white text-center'>{loading ? <View className='w-[100%] items-center'><ActivityIndicator size={32} color={'white'}/></View> : 'Sign in to your account'}</Text>
           </TouchableOpacity>
           <View className='flex-row w-[90%] mx-auto my-8'>
               <Text className='text-md text-customsalmon mr-2'>Don't have an account yet?</Text>

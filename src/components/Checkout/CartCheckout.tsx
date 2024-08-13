@@ -6,6 +6,7 @@ import Rating from '../Stars';
 import Loading from '../Dialogs/Loading';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import CartStripeCheckout from './CartStripeCheckout';
+import InfoDialog from '../Dialogs/InfoDialog';
 interface Address {
     addressID:number;
     addressType:string;
@@ -33,11 +34,10 @@ interface ProductDetails {
 const CartCheckout = ({navigation,route}:{navigation:any,route:any}) => {
     const Stripe_PUBLISHABLE_KEY = process.env.STRIPE_PUBLISHABLE_KEY as string;
     const MERCHANT_ID = process.env.STRIPE_ID as string;
-    const [NoDefaultAdd, setNoDefaultAdd] = useState(false);
+    const [DefaultAdd, setDefaultAdd] = useState(false);
     const defaultAccount = useAppSelector((state) => state.userState.defaultAccount);
     const addresses = useAppSelector((state) => state.userState.addresses);
     const [PaymentMethod, setPaymentMethod] = useState<'cash'|'card'>('card');
-    const [clientSecret, setClientSecret] = useState("");
     const dataVar = useRef<ProductDetails[]>([]);
     const data = dataVar.current;
     const [paymentCharge, setPaymentCharge] = useState(0);
@@ -70,10 +70,9 @@ const CartCheckout = ({navigation,route}:{navigation:any,route:any}) => {
         is_default:true
     });
     useEffect(()=>{
-        const defaultAdd:Address = DefaultAddress;
         if(addresses.length > 0){
             addresses.map((each)=>each.is_default && setDefaultAddress(each));
-            defaultAdd===DefaultAddress && setNoDefaultAdd(true);
+            addresses.map((each)=>each.is_default && setDefaultAdd(true));
         }else setdialogType('noAddress');
         sync();
     });
@@ -110,10 +109,15 @@ const CartCheckout = ({navigation,route}:{navigation:any,route:any}) => {
                 break;
         }
     }
+    function redirectSettings(){
+        navigation.navigate('AccountSettings');
+    }
   return (
     
     <View className='bg-white h-[100%] w-[100%] border-t-[1px] border-customsalmon'>
         {loading && <Loading/>}
+        {!DefaultAdd && <InfoDialog title='No Address' message='We found no default address. Please add an address or set existing one default.' btn='Settings' btnFunc={redirectSettings}/>}
+        {dialogType==='noAddress' && <InfoDialog title='No Address' message='We found no address. Please add an address to proceed with order.' btn='Settings' btnFunc={redirectSettings}/>}
       <ScrollView className='w-[100%] h-[100%]'>
         <View className='w-[90%] mx-auto mb-4 mt-4'>
             <Text className='text-black text-xl font-bold'>Delivery Details</Text>
@@ -142,20 +146,20 @@ const CartCheckout = ({navigation,route}:{navigation:any,route:any}) => {
                 <Text className='text-black text-xl font-bold'>Payment</Text>
             </View>
             <View className='w-[90%] mx-auto'>
-                <View className='bg-customsalmon rounded-xl h-[90px] w-[100%] mb-2 items-center flex-row px-6'>
-                    <TouchableOpacity onPress={()=>{setPaymentMethod('card');setPaymentCharge(0)}} className='w-[30px] h-[30px] items-center justify-center rounded-full bg-white border-[1px] border-customsalmon'>{PaymentMethod==='card' && <View className='bg-customsalmon w-[16px] h-[16px] rounded-full'></View>}</TouchableOpacity>
+                <TouchableOpacity onPress={()=>{setPaymentMethod('card');setPaymentCharge(0)}} className='bg-customsalmon rounded-xl h-[90px] w-[100%] mb-2 items-center flex-row px-6'>
+                    <View className='w-[30px] h-[30px] items-center justify-center rounded-full bg-white border-[1px] border-customsalmon'>{PaymentMethod==='card' && <View className='bg-customsalmon w-[16px] h-[16px] rounded-full'></View>}</View>
                     <View className='ml-6'>
                         <Text className='font-bold text-lg text-white'>Online Payment</Text>
                         <Text className='font-bold text-[#FFBCB5]'>Pay with your Bank/Card</Text>
                     </View>
-                </View>
-                <View className='bg-customsalmon rounded-xl h-[90px] w-[100%] mb-2 items-center flex-row px-6'>
-                    <TouchableOpacity onPress={()=>{setPaymentMethod('cash');setPaymentCharge(15)}} className='w-[30px] h-[30px] items-center justify-center rounded-full bg-white border-[1px] border-customsalmon'>{PaymentMethod==='cash' && <View className='bg-customsalmon w-[16px] h-[16px] rounded-full'></View>}</TouchableOpacity>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=>{setPaymentMethod('cash');setPaymentCharge(15)}} className='bg-customsalmon rounded-xl h-[90px] w-[100%] mb-2 items-center flex-row px-6'>
+                    <View className='w-[30px] h-[30px] items-center justify-center rounded-full bg-white border-[1px] border-customsalmon'>{PaymentMethod==='cash' && <View className='bg-customsalmon w-[16px] h-[16px] rounded-full'></View>}</View>
                     <View className='ml-6'>
                         <Text className='font-bold text-lg text-white'>Payment on Delivery</Text>
                         <Text className='font-bold text-[#FFBCB5]'>+$15 Payment Processing fee</Text>
                     </View>
-                </View>
+                </TouchableOpacity>
             </View>
         </View>
         <View>
@@ -187,39 +191,39 @@ const CartCheckout = ({navigation,route}:{navigation:any,route:any}) => {
                 <View className='py-3 w-[100%] items-center border-b-[1px] border-customsalmon'>
                     <View className='w-[90%] justify-between flex-row'>
                         <Text className='font-semibold text-lg text-black'>Subtotal</Text>
-                        <Text className='font-bold text-lg text-salmon'>${formattedSubTotal}</Text>
+                        <Text className='font-bold text-lg text-customsalmon'>${formattedSubTotal}</Text>
                     </View>
                 </View>
                 <View className='py-3 w-[100%] items-center border-b-[1px] border-customsalmon'>
                     <View className='w-[90%] justify-between flex-row'>
                         <Text className='font-semibold text-lg text-black'>Shipping Charge</Text>
-                        <Text className='font-bold text-lg text-salmon'>${formattedShipping}</Text>
+                        <Text className='font-bold text-lg text-customsalmon'>${formattedShipping}</Text>
                     </View>
                 </View>
                 {paymentCharge > 0 &&
                 <View className='py-3 w-[100%] items-center border-b-[1px] border-customsalmon'>
                     <View className='w-[90%] justify-between flex-row'>
                         <Text className='font-semibold text-lg text-black'>Payment Processing fee</Text>
-                        <Text className='font-bold text-lg text-salmon'>${paymentCharge}</Text>
+                        <Text className='font-bold text-lg text-customsalmon'>${paymentCharge}</Text>
                     </View>
                 </View>
                 }
                 <View className='py-3 w-[100%] items-center border-b-[1px] border-customsalmon'>
                     <View className='w-[90%] justify-between flex-row'>
                         <Text className='font-semibold text-lg text-black'>Taxes</Text>
-                        <Text className='font-bold text-lg text-salmon'>${formattedTaxes}</Text>
+                        <Text className='font-bold text-lg text-customsalmon'>${formattedTaxes}</Text>
                     </View>
                 </View>
                 <View className='py-3 w-[100%] items-center border-b-[1px] border-customsalmon'>
                     <View className='w-[90%] justify-between flex-row'>
                         <Text className='font-semibold text-lg text-black'>Discount</Text>
-                        <Text className='font-bold text-lg text-salmon'>${formattedDiscount}</Text>
+                        <Text className='font-bold text-lg text-customsalmon'>${formattedDiscount}</Text>
                     </View>
                 </View>
                 <View className='py-3 w-[100%] items-center'>
                     <View className='w-[90%] justify-between flex-row'>
                         <Text className='font-bold text-xl text-black'>Total</Text>
-                        <Text className='font-bold text-lg text-salmon'>${formattedTotalAmount}</Text>
+                        <Text className='font-bold text-lg text-customsalmon'>${formattedTotalAmount}</Text>
                     </View>
                 </View>
             </View>

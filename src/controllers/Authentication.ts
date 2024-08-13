@@ -8,12 +8,13 @@ import authDataHandler from "../api/googleAuth";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 import sessionHandler from "../api/sessionauth";
+import userData from "./userData";
 
 const useAuth = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const { toggleLoggedIn, toggleIsIncorrect, toggleIsExists, toggleServerError, setLoggedIn } = useApp();
   const dispatch = useAppDispatch();
-
+  const { grabUserData } = userData();
   const checkLogin = async (form: { email: string; password: string }, remember: boolean,setloading:React.Dispatch<React.SetStateAction<boolean>>) => {
     try {
       // const res = await axios.post('/api/signin', { email: form.email, password: form.password, remember });
@@ -29,6 +30,7 @@ const useAuth = () => {
               dob: res.data.userData.dob,
             };
             dispatch(setDefaultAccount(data));
+            await grabUserData();
             setloading(false);
             setLoggedIn(true);
             navigation.navigate('Home');
@@ -92,6 +94,7 @@ const useAuth = () => {
                 dob: res.data.userData.dob,
               };
               dispatch(setDefaultAccount(data));
+              
               setLoggedIn(true);
               return {success:true,data};
             } catch (tokenError) {
@@ -107,9 +110,9 @@ const useAuth = () => {
         // console.log("Login Failed");
       }
   };
-  const checkAuthLogin = async (authCode:string,setloading:React.Dispatch<React.SetStateAction<boolean>>)=>{
+  const checkAuthLogin = async (authMail:string,setloading:React.Dispatch<React.SetStateAction<boolean>>)=>{
     try {
-      const res = await authDataHandler(authCode);
+      const res = await authDataHandler(authMail);
       switch (res.status) {
         case 200:
           try {
@@ -120,11 +123,14 @@ const useAuth = () => {
               mobile_number: res.data.userData.mobile_number,
               dob: res.data.userData.dob,
             };
+            
             dispatch(setDefaultAccount(data));
+            await grabUserData();
             setloading(false);
             setLoggedIn(true);
             navigation.navigate('Home');
           } catch (tokenError) {
+            
             toggleServerError(); // Optionally, handle token verification errors differently
           }
           break;
@@ -134,6 +140,7 @@ const useAuth = () => {
           break;
       }
     } catch (error) {
+
       setloading(false);
       toggleServerError();
     }

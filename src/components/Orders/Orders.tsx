@@ -92,7 +92,7 @@ const Orders = () => {
                         <Text className='text-lg text-customsalmon font-semibold'>Coming on {formatDate(each.deliveredat)}</Text>
                     </View>
                     <View className='w-[100%] h-[50%] justify-between flex-row'>
-                        <TouchableOpacity className='bg-customsalmon h-full w-[50%] justify-center rounded-bl-2xl'><Text className='text-lg font-bold text-white text-center'>View Order</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={()=>navigation.navigate('OrderSummary',{orderID:each.orderid})} className='bg-customsalmon h-full w-[50%] justify-center rounded-bl-2xl'><Text className='text-lg font-bold text-white text-center'>View Order</Text></TouchableOpacity>
                         <View className='w-[1px] h-[100%] bg-white'></View>
                         <TouchableOpacity onPress={()=>navigation.navigate('Product',{productID:each.productid})} className='bg-customsalmon h-full w-[50%] justify-center rounded-br-2xl'><Text className='text-lg font-bold text-white text-center'>Buy again</Text></TouchableOpacity>
                     </View>

@@ -161,8 +161,8 @@ const ReviewsSec = ({data,productID,reviewCount,setselectedReview,setdialogType}
                             {each.comment}
                         </Text>
                         <View className='flex-row justify-between mt-4'>
-                            {each.userid===defaultAccount.userID && <><TouchableOpacity className='px-6 bg-customsalmon rounded-[10px] py-1'><Text className='font-bold text-md text-white'>Edit Review</Text></TouchableOpacity>
-                            <TouchableOpacity onPress={()=>{setselectedReview(each);setdialogType(null)}} className='px-6 rounded-[10px] border-customsalmon border-[1px] py-1'><Text className='font-bold text-md text-black'>Delete Review</Text></TouchableOpacity></>}
+                            {each.userid===defaultAccount.userID && <><TouchableOpacity onPress={()=>{setselectedReview(each);setdialogType('editReview')}} className='px-6 bg-customsalmon rounded-[10px] py-1'><Text className='font-bold text-md text-white'>Edit Review</Text></TouchableOpacity>
+                            <TouchableOpacity onPress={()=>{setselectedReview(each);setdialogType('deletePopup')}} className='px-6 rounded-[10px] border-customsalmon border-[1px] py-1'><Text className='font-bold text-md text-black'>Delete Review</Text></TouchableOpacity></>}
                         </View>
                     </View>)}
                 </View>

@@ -68,7 +68,7 @@ const Products = () => {
           <Text className='mx-auto text-black font-bold text-[22px]'>Products</Text>
       </View>
       <View className='mx-auto w-[90%] h-auto flex-wrap flex-row justify-between'>
-        {loading && <ActivityIndicator size={96} color={'salmon'}/>}
+        {loading && <View className='w-[100%] items-center'><ActivityIndicator size={96} color={'salmon'}/></View>}
         {!loading && products.current.map((each,index)=><TouchableOpacity key={each.productid} onPress={()=>navigation.navigate('Product',{productID:each.productid})} className='h-[300px] w-[180px] border-[1px] border-customsalmon rounded-2xl mb-6'>
           <Image source={{uri:each.images.imglink}} alt={each.images.imgalt} className='max-w-[100%] my-2 w-[90%] mx-auto h-[180px] max-h-[250px]'/>
           <View className='mx-auto w-[95%] justify-between h-[100px]'>

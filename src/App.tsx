@@ -12,11 +12,11 @@ import SignIn from './components/Login/SignIn';
 import SignUp from './components/Login/SignUp';
 import AccountSettings from './components/AccountSettings/AccountSettings';
 import Orders from './components/Orders/Orders';
-import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 import ForgotPassword from './components/Login/ForgotPassword';
 import ProductCheckout from './components/Checkout/ProductCheckout';
 import Confirmation from './components/Confirmation/Confirmation';
 import CartCheckout from './components/Checkout/CartCheckout';
+import OrderSummary from './components/OrderSummary/OrderSummary';
 const Stack = createNativeStackNavigator();
 interface Params {
   params:{productID:string};
@@ -70,6 +70,11 @@ const App = () => {
               }}/>
               <Stack.Screen name="Confirmation" component={Confirmation} options={{
                 headerTitle:'Order Confirmation',
+                headerTitleAlign:'center',
+                headerBackVisible:false
+              }}/>
+              <Stack.Screen name="OrderSummary" component={OrderSummary} options={{
+                headerTitle:'Order Summary',
                 headerTitleAlign:'center',
                 headerBackVisible:false
               }}/>
