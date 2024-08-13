@@ -4,9 +4,11 @@ import { Google } from '../NativeSVG'
 import Checkbox from '../Checkbox'
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types'
-import { Formik } from 'formik'
+import { Formik,ErrorMessage } from 'formik'
 import useAuth from '../../controllers/Authentication'
 import { GoogleSignin,statusCodes } from '@react-native-google-signin/google-signin';
+import * as Yup from 'yup';
+
 const SignIn = () => {
   const clientID = process.env.FRONTEND_GOOGLE_CLIENT_ID as string;
   GoogleSignin.configure();
@@ -62,6 +64,17 @@ const SignIn = () => {
         }
       }
     };
+    const signinValidationSchema = Yup.object({
+      email: Yup.string()
+        .email('Invalid email address')
+        .min(5, 'Email must be at least 5 characters')
+        .max(128, 'Email must be at most 128 characters')
+        .required('Email Required'),
+      password: Yup.string()
+        .min(8, 'Password must be at least 8 characters')
+        .max(32, 'Password must be at most 32 characters')
+        .required('Password Required'),
+    });
   return (
     <View className='bg-white h-[100%] w-[100%] border-t-[1px] border-customsalmon'>
       <ScrollView className='w-[100%] h-[100%]'>
@@ -81,15 +94,18 @@ const SignIn = () => {
             <Text className='text-black text-lg font-medium'>or</Text>
             <View className='w-[45%] h-[1px] bg-customsalmon'></View>
         </View>
-        <Formik initialValues={{ email: '',password:'' }}
+        <Formik validationSchema={signinValidationSchema} initialValues={{ email: '',password:'' }}
       onSubmit={values => login(values,isChecked)}>
-        {({ handleChange, handleBlur, handleSubmit, values }) => (
+        {({ handleChange, handleBlur, handleSubmit, values, errors, touched }:{handleChange:any,handleBlur:any,handleSubmit:any,values:any,errors:any,touched:any}) => (
         <View>
+          {touched.email && errors.email && <Text className='text-customsalmon text-center'>{errors.email}</Text>}
+          {touched.password && errors.password && <Text className='text-customsalmon text-center'>{errors.password}</Text>}
+
           <View className='w-[90%] mx-auto'>
               <Text className='text-lg text-black font-semibold'>Email</Text>
-              <TextInput placeholder='Enter your email' inputMode='email' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('email')} onChangeText={handleChange('email')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px] text-white bg-customsalmon rounded-xl mt-4'/>
+              <TextInput maxLength={128} placeholder='Enter your email' inputMode='email' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('email')} onChangeText={handleChange('email')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px] text-white bg-customsalmon rounded-xl mt-4'/>
               <Text className='text-lg text-black font-semibold mt-6'>Password</Text>
-              <TextInput secureTextEntry={true} placeholder='********' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('password')} onChangeText={handleChange('password')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px]  text-white bg-customsalmon rounded-xl mt-4'/>
+              <TextInput maxLength={32} secureTextEntry={true} placeholder='********' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('password')} onChangeText={handleChange('password')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px]  text-white bg-customsalmon rounded-xl mt-4'/>
           </View>
           <View className='my-8 w-[90%] mx-auto justify-between flex-row items-center'>
               <View className='flex-row items-center'>

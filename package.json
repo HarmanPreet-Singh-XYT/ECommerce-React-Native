@@ -32,7 +32,8 @@
     "react-native-screens": "^3.33.0",
     "react-native-star-rating-widget": "^1.8.0",
     "react-native-svg": "^15.5.0",
-    "react-redux": "^9.1.2"
+    "react-redux": "^9.1.2",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -5,9 +5,11 @@ import { Calendar as Cal } from '../NativeSVG'
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types'
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
-import { Formik } from 'formik'
+import { Formik,ErrorMessage } from 'formik'
 import useAuth from '../../controllers/Authentication'
 import { useApp } from '../../helpers/AccountDialog'
+import * as Yup from 'yup';
+
 interface date{
   dateString:string;
   day:number;
@@ -19,7 +21,7 @@ const SignUp = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
     const [isChecked, setisChecked] = useState({termsConditons:false,promotion:false});
     const [UIState, setUIState] = useState({calendar:false});
-    const [selectedDate, setSelectedDate] = useState('');
+    const [selectedDate, setSelectedDate] = useState('2024-04-04');
     function toggleCheckTerms(){
         setisChecked({...isChecked,termsConditons:!isChecked.termsConditons});
     };
@@ -46,27 +48,54 @@ const SignUp = () => {
             else toggleIsOpenAgreement();
         }else toggleIsPassword();
     };
+    const signupValidationSchema = Yup.object({
+      name: Yup.string()
+        .min(4, 'Name must be at least 4 characters')
+        .max(64, 'Name must be at most 64 characters')
+        .required('Name Required'),
+      email: Yup.string()
+        .email('Invalid email address')
+        .min(5, 'Email must be at least 5 characters')
+        .max(128, 'Email must be at most 128 characters')
+        .required('Email Required'),
+      password: Yup.string()
+        .min(8, 'Password must be at least 8 characters')
+        .max(32, 'Password must be at most 32 characters')
+        .required('Password Required'),
+      repassword: Yup.string()
+        .min(8, 'Password must be at least 8 characters')
+        .max(32, 'Password must be at most 32 characters')
+        .required('Re-entered Password Required'),
+      mobileNumber: Yup.string()
+        .length(10, 'Mobile number must be exactly 10 digits')
+        .required('Mobile Number Required'),
+    });
   return (
     <View className='bg-white h-[100%] w-[100%] border-t-[1px] border-customsalmon'>
       <ScrollView className='w-[100%] h-[100%]'>
         <View className='flex-row w-[90%] mx-auto mb-6 mt-4'>
           <Text className='text-black text-xl font-bold'>Create new account</Text>
         </View>
-        <Formik initialValues={{ name:'',email: '',password:'',repassword:'',mobileNumber:'' }}
+        <Formik validationSchema={signupValidationSchema} initialValues={{ name:'',email: '',password:'',repassword:'',mobileNumber:'' }}
         onSubmit={values => register(values,isChecked.termsConditons,isChecked.promotion)}>
-          {({ handleChange, handleBlur, handleSubmit, values }) => (
+          {({ handleChange, handleBlur, handleSubmit, values, errors, touched }:{handleChange:any,handleBlur:any,handleSubmit:any,values:any,errors:any,touched:any}) => (
           <View>
+            {touched.email && errors.email && <Text className='text-customsalmon text-center'>{errors.email}</Text>}
+            {touched.password && errors.password && <Text className='text-customsalmon text-center'>{errors.password}</Text>}
+            {touched.repassword && errors.repassword && <Text className='text-customsalmon text-center'>{errors.repassword}</Text>}
+            {touched.mobileNumber && errors.mobileNumber && <Text className='text-customsalmon text-center'>{errors.mobileNumber}</Text>}
+            {touched.name && errors.name && <Text className='text-customsalmon text-center'>{errors.name}</Text>}
             <View className='w-[90%] mx-auto'>
                 <Text className='text-lg text-black font-semibold'>Full Name</Text>
-                <TextInput placeholder='Enter your name' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('name')} onChangeText={handleChange('name')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px] text-white bg-customsalmon rounded-xl mt-4'/>
+                <TextInput maxLength={64} placeholder='Enter your name' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('name')} onChangeText={handleChange('name')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px] text-white bg-customsalmon rounded-xl mt-4'/>
                 <Text className='text-lg text-black font-semibold mt-6'>Email</Text>
-                <TextInput placeholder='Enter your email' inputMode='email' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('email')} onChangeText={handleChange('email')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px] text-white bg-customsalmon rounded-xl mt-4'/>
+                <TextInput maxLength={128} placeholder='Enter your email' inputMode='email' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('email')} onChangeText={handleChange('email')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px] text-white bg-customsalmon rounded-xl mt-4'/>
                 <Text className='text-lg text-black font-semibold mt-6'>Password</Text>
-                <TextInput secureTextEntry={true} placeholder='********' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('password')} onChangeText={handleChange('password')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px]  text-white bg-customsalmon rounded-xl mt-4'/>
+                <TextInput maxLength={32} secureTextEntry={true} placeholder='********' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('password')} onChangeText={handleChange('password')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px]  text-white bg-customsalmon rounded-xl mt-4'/>
                 <Text className='text-lg text-black font-semibold mt-6'>Re-enter Password</Text>
-                <TextInput secureTextEntry={true} placeholder='********' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('repassword')} onChangeText={handleChange('repassword')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px]  text-white bg-customsalmon rounded-xl mt-4'/>
+                <TextInput maxLength={32} secureTextEntry={true} placeholder='********' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('repassword')} onChangeText={handleChange('repassword')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px]  text-white bg-customsalmon rounded-xl mt-4'/>
                 <Text className='text-lg text-black font-semibold mt-6'>Mobile Number</Text>
-                <TextInput inputMode='tel' placeholder='Enter your mobile number' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('mobileNumber')} onChangeText={handleChange('mobileNumber')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px] text-white bg-customsalmon rounded-xl mt-4'/>
+                <TextInput maxLength={10} inputMode='tel' placeholder='Enter your mobile number' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('mobileNumber')} onChangeText={handleChange('mobileNumber')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px] text-white bg-customsalmon rounded-xl mt-4'/>
                 <Text className='text-lg text-black font-semibold mt-6'>Date of Birth</Text>
                 <View style={{marginBottom:UIState.calendar ? 6 : 0}} className='flex-row items-center  mt-4'>
                     <TextInput value={selectedDate} readOnly placeholder='yyyy-mm-dd' placeholderTextColor={'#FFBCB5'} textAlignVertical='center' className='w-[85%] font-bold text-md px-6 h-[45px] text-white bg-customsalmon rounded-l-xl'/>
@@ -87,12 +116,13 @@ const SignUp = () => {
             <TouchableOpacity onPress={()=>handleSubmit()} className='w-[85%] mx-auto h-[60px] justify-center rounded-2xl bg-customsalmon'>
                 <Text className='text-lg font-bold text-white text-center'>Sign up with H-Comm</Text>
             </TouchableOpacity>
-          </View>)}
-        </Formik>
-        <View className='flex-row w-[90%] mx-auto my-8'>
+            <View className='flex-row w-[90%] mx-auto my-8'>
             <Text className='text-md text-customsalmon mr-2'>Already have an account?</Text>
-            <TouchableOpacity onPress={()=>navigation.navigate('Signin')}><Text className='underline text-md text-[#FF5C50] font-semibold'>Sign in</Text></TouchableOpacity>
-        </View>
+              <TouchableOpacity onPress={()=>navigation.navigate('Signin')}><Text className='underline text-md text-[#FF5C50] font-semibold'>Sign in</Text></TouchableOpacity>
+            </View>
+          </View>
+        )}
+        </Formik>
       </ScrollView>
     </View>
   )

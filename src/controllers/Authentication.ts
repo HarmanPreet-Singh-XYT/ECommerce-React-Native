@@ -12,7 +12,7 @@ import userData from "./userData";
 
 const useAuth = () => {
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
-  const { toggleLoggedIn, toggleIsIncorrect, toggleIsExists, toggleServerError, setLoggedIn } = useApp();
+  const { toggleIsIncorrect, toggleIsExists, toggleServerError, setLoggedIn } = useApp();
   const dispatch = useAppDispatch();
   const { grabUserData } = userData();
   const checkLogin = async (form: { email: string; password: string }, remember: boolean,setloading:React.Dispatch<React.SetStateAction<boolean>>) => {

@@ -1,9 +1,10 @@
 import { View, Text, TouchableOpacity, TextInput } from 'react-native'
 import React, { useState } from 'react'
 import { BlurView } from "@react-native-community/blur";
-import { Formik } from 'formik';
+import { Formik,ErrorMessage } from 'formik';
 import { Calendar } from 'react-native-calendars';
 import { Calendar as Cal } from '../NativeSVG'
+import * as Yup from 'yup';
 interface params{
     parameter:string
 };
@@ -20,6 +21,39 @@ const SettingParameter = ({title,message,btn1,btn2,message2,message3,btn1Func,bt
     function toggleCalendar(){
         setUIState({...UIState,calendar:!UIState.calendar});
     };
+    const getValidationSchema = () => {
+      switch (dialogType) {
+        case 'name':
+          return Yup.string()
+            .min(4, 'Name must be at least 4 characters')
+            .max(64, 'Name must be at most 64 characters')
+            .required('Name Required');
+        case 'email':
+          return Yup.string()
+            .email('Invalid email address')
+            .min(5, 'Email must be at least 5 characters')
+            .max(128, 'Email must be at most 128 characters')
+            .required('Email Required');
+        case 'number':
+          return Yup.string()
+            .length(10, 'Mobile number must be exactly 10 digits')
+            .required('Mobile Number Required');
+        case 'password':
+          return Yup.string()
+            .min(8, 'Password must be at least 8 characters')
+            .max(32, 'Password must be at most 32 characters')
+            .required('Password Required');
+        default:
+          return Yup.string(); // No validation if dialogType does not match
+      }
+    };
+    
+    const validationSchema = Yup.object({
+      parameter: Yup.string().test('is-correct-type', 'Invalid input', function(value) {
+        const schema = getValidationSchema();
+        return schema.isValidSync(value);
+      }),
+    });
     return (
     <>
       <BlurView
@@ -29,16 +63,17 @@ const SettingParameter = ({title,message,btn1,btn2,message2,message3,btn1Func,bt
         reducedTransparencyFallbackColor="white"
       />
       <View style={{position:'absolute',left:0,right:0,top:0,bottom:0,justifyContent:'center',alignItems:'center',zIndex:10}}>
-      <Formik initialValues={{parameter:''}}
+      <Formik validationSchema={validationSchema} initialValues={{parameter:''}}
       onSubmit={values => btn2Func(values)}>
-        {({ handleChange, handleBlur, handleSubmit, values }) => (
-        <View className='bg-white border-[1px] border-customsalmon w-[90%] rounded-2xl h-auto py-4 items-center justify-evenly'>
-          <View className='items-center mb-2 w-[95%] mx-auto'>
-            <Text className='text-xl font-bold text-black mb-2'>{title}</Text>
-            <Text className='text-lg font-medium text-black text-center'>{message}</Text>
-            {message2 && <Text className='text-lg font-semibold text-white'>{message2}</Text>}
-            {message3 && <Text className='text-lg font-semibold text-white'>{message3}</Text>}
-            <Text className='text-lg font-bold text-black'>{parameterMessage}</Text>
+        {({ handleChange, handleBlur, handleSubmit, values, errors, touched }:{handleChange:any,handleBlur:any,handleSubmit:any,values:any,errors:any,touched:any}) => (
+        <View className='bg-white border-[1px] border-customsalmon w-[90%] rounded-2xl h-auto py-6 items-center justify-evenly'>
+          {touched.parameter && errors.parameter && <Text className='text-customsalmon text-center'>{errors.parameter}</Text>}
+          <View className='items-center mb-6 w-[95%] mx-auto'>
+            <Text className='text-lg font-bold text-black mb-2'>{title}</Text>
+            <Text className='text-md font-medium text-black text-center mb-1'>{message}</Text>
+            {message2 && <Text className='text-md font-semibold text-white'>{message2}</Text>}
+            {message3 && <Text className='text-md font-semibold text-white'>{message3}</Text>}
+            <Text className='text-md font-bold text-black mb-4'>{parameterMessage}</Text>
            {dialogType==='name' && <TextInput placeholder={`Enter your ${placeholder}`} placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('parameter')} onChangeText={handleChange('parameter')} className='bg-customsalmon mt-1 font-bold text-white w-[80%] rounded-xl h-[40px] px-6'/>}
            {dialogType==='email' && <TextInput inputMode='email' maxLength={128} placeholder={`Enter your ${placeholder}`} onBlur={handleBlur('parameter')} onChangeText={handleChange('parameter')} placeholderTextColor={'#FFBCB5'} className='bg-customsalmon mt-1 font-bold text-white w-[80%] rounded-xl h-[40px] px-6'/>}
            {dialogType==='number' && <TextInput inputMode='tel' maxLength={10} placeholder={`Enter your ${placeholder}`} onBlur={handleBlur('parameter')} onChangeText={handleChange('parameter')} placeholderTextColor={'#FFBCB5'} className='bg-customsalmon mt-1 font-bold text-white w-[80%] rounded-xl h-[40px] px-6'/>}
@@ -51,11 +86,11 @@ const SettingParameter = ({title,message,btn1,btn2,message2,message3,btn1Func,bt
             }
           </View>
           <View className='flex-row gap-5'>
-            <TouchableOpacity onPress={btn1Func} className='bg-white px-8 rounded-xl py-1 border-[1px] border-customsalmon'>
-              <Text className='text-black font-bold text-lg'>{btn1}</Text>
+            <TouchableOpacity onPress={btn1Func} className='bg-white px-8 rounded-xl py-2 border-[1px] border-customsalmon'>
+              <Text className='text-black font-bold text-md'>{btn1}</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={()=>handleSubmit()} className='bg-customsalmon border-[1px] border-white px-8 rounded-xl py-1'>
-              <Text className='text-white font-bold text-lg'>{btn2}</Text>
+            <TouchableOpacity onPress={()=>handleSubmit()} className='bg-customsalmon border-[1px] border-white px-8 rounded-xl py-2'>
+              <Text className='text-white font-bold text-md'>{btn2}</Text>
             </TouchableOpacity>
           </View>
         </View>

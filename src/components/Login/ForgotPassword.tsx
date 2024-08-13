@@ -2,13 +2,14 @@ import { View, Text, ScrollView, TouchableOpacity, TextInput, ActivityIndicator 
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types'
-import { Formik } from 'formik'
+import { Formik,ErrorMessage } from 'formik'
 import resetPassHandler from '../../api/resetPass'
 import forgotOTPHandler from '../../api/sendOTP'
 import { useApp } from '../../helpers/AccountDialog'
 import Loading from '../Dialogs/Loading'
 import InfoDialog from '../Dialogs/InfoDialog'
 import OTPDialog from '../Dialogs/OTPDialog'
+import * as Yup from 'yup';
 interface userData{
     email:string;
     password:string;
@@ -107,7 +108,22 @@ const ForgotPassword = () => {
     };
     function successRedirect(){
         navigation.navigate('Signin')
-    }
+    };
+    const resetPasswordValidationSchema = Yup.object({
+        email: Yup.string()
+          .email('Invalid email address')
+          .min(5, 'Email must be at least 5 characters')
+          .max(128, 'Email must be at most 128 characters')
+          .required('Required'),
+        password: Yup.string()
+          .min(8, 'Password must be at least 8 characters')
+          .max(32, 'Password must be at most 32 characters')
+          .required('Required'),
+        repassword: Yup.string()
+          .min(8, 'Password must be at least 8 characters')
+          .max(32, 'Password must be at most 32 characters')
+          .required('Required'),
+    });
   return (
     <View className='bg-white h-[100%] w-[100%] border-t-[1px] border-customsalmon'>
         {(loading && otpPopup) && <Loading/>}
@@ -123,19 +139,20 @@ const ForgotPassword = () => {
         <View className='flex-row w-[90%] mx-auto mb-6 mt-4'>
           <Text className='text-black text-xl font-bold'>Sign in With</Text>
         </View>
-        <Formik initialValues={{ email: '',password:'',repassword:'', }}
+        <Formik validationSchema={resetPasswordValidationSchema} initialValues={{ email: '',password:'',repassword:'', }}
       onSubmit={values => resetPass(values)}>
-        {({ handleChange, handleBlur, handleSubmit, values }) => (
+        {({ handleChange, handleBlur, handleSubmit, values, errors, touched }:{handleChange:any,handleBlur:any,handleSubmit:any,values:any,errors:any,touched:any}) => (
             <View>
-                <View className='w-[90%] mx-auto'>
+                {(touched.email && errors.email) && <Text className='text-customsalmon text-center'>{errors.email}</Text>}
+                {(touched.password && errors.password) && <Text className='text-customsalmon text-center'>{errors.password}</Text>}
+                {(touched.repassword && errors.repassword)&& <Text className='text-customsalmon text-center'>{errors.repassword}</Text>}
+                <View className='w-[90%] mx-auto mb-8'>
                     <Text className='text-lg text-black font-semibold'>Email</Text>
-                    <TextInput placeholder='Enter your email' inputMode='email' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('email')} onChangeText={handleChange('email')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px] text-white bg-customsalmon rounded-xl mt-4'/>
+                    <TextInput maxLength={128} placeholder='Enter your email' inputMode='email' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('email')} onChangeText={handleChange('email')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px] text-white bg-customsalmon rounded-xl mt-4'/>
                     <Text className='text-lg text-black font-semibold mt-6'>Password</Text>
-                    <TextInput secureTextEntry={true} placeholder='********' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('password')} onChangeText={handleChange('password')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px]  text-white bg-customsalmon rounded-xl mt-4'/>
+                    <TextInput maxLength={32} secureTextEntry={true} placeholder='********' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('password')} onChangeText={handleChange('password')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px]  text-white bg-customsalmon rounded-xl mt-4'/>
                     <Text className='text-lg text-black font-semibold mt-6'>Re-Enter Password</Text>
-                    <TextInput secureTextEntry={true} placeholder='********' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('repassword')} onChangeText={handleChange('repassword')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px]  text-white bg-customsalmon rounded-xl mt-4'/>
-                </View>
-                <View className='my-5 w-[90%] mx-auto justify-between flex-row items-center'>
+                    <TextInput maxLength={32} secureTextEntry={true} placeholder='********' placeholderTextColor={'#FFBCB5'} onBlur={handleBlur('repassword')} onChangeText={handleChange('repassword')} textAlignVertical='center' className='w-[100%] font-bold text-md px-6 h-[45px]  text-white bg-customsalmon rounded-xl mt-4'/>
                 </View>
                 <TouchableOpacity disabled={loading} onPress={()=>handleSubmit()} className='w-[85%] mx-auto h-[50px] justify-center rounded-2xl bg-customsalmon'>
                     <Text className='text-lg font-bold text-white text-center'>{loading ? <View className='mx-auto'><ActivityIndicator size={32} color={'white'}/></View> : 'Get OTP & Reset Password'}</Text>
