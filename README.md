@@ -1,79 +1,72 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# eCommerce Native App
 
-# Getting Started
+Welcome to the repository for our full stack eCommerce App built using the PERN stack (PostgreSQL, Express, React, Node.js) and React Native for this. This project demonstrates a comprehensive online shopping experience with a variety of features and pages.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+This App is small version of the web version of Ecommerce that can be found here: https://github.com/HarmanPreet-Singh-XYT/E-Commerce
+Web deployed version: https://harman-ecommerce.vercel.app/
 
-## Step 1: Start the Metro Server
+## Features
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+### eCommerce Features
+- **Categories & Subcategories:** Well-organized categories and subcategories for easy navigation.
+- **Products:** Detailed product pages with options for different sizes and colors.
+- **Payment Gateway:** Integrated with individual products and cart for secure transactions. ( Stripe )
+- **Wishlist:** Option to save favorite products.
+- **Special Deals:** Exclusive deals displayed on the homepage.
+- **Responsive Design:** Modern and mobile-friendly layout.
+- **Quantity Purchase:** Ability to purchase multiple quantities of a product.
+- **Homepage Algorithms:** Various algorithms to display products dynamically on the homepage.
+- **JWT Session:** Secure user sessions with JWT.
+- **Encrypted Passwords:** Enhanced security with password encryption.
+- **OAuth Support:** Easy registration and sign-in with OAuth.
+- **Payment on Delivery:** Option to pay upon delivery.
+- **Order Tracking:** Track orders with a detailed orders page.
+- **Order Summary:** Comprehensive order summary page.
+- **Custom Checkout:** Tailored checkout experience.
+- **Review System:** Post, delete, and edit reviews with a dedicated reviews page.
+- **Dynamic Routing:** Smooth navigation with dynamic routing.
+- **Active Review & Rating Calculation:** Backend will update variables required for algorithms to work properly, actively calculate rating's & frontend required parameters.
 
-To start Metro, run the following command from the _root_ of your React Native project:
+## Installation
 
-```bash
-# using npm
-npm start
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/HarmanPreet-Singh-XYT/ECommerce-React-Native
+2. Navigate to the project directory:
+   ```sh
+   cd Ecommerce
+3. Install dependencies for the server:
+   ```sh
+   npm install
+4. Set up environment variables in a .env file.
 
-# OR using Yarn
-yarn start
-```
+## Running the Application (Development)
 
-## Step 2: Start your Application
+1. Start the Server and ensure you have android emulator installed and prepared or physical device:
+   ```sh
+   npm run start
+2. Select your device, Currently it has only been tested under Android Environment, you may find problems with dependencies that needs to be linked via Mac.
+3. The app will be automatically installed and built on your device and you'll be able to run it, don't forget to have your server running.
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+For Backend server and its configuration, Visit here https://github.com/HarmanPreet-Singh-XYT/E-Commerce.
+you'll find guide and server files not limited to backend but also web frontend of this app.
 
-### For Android
+## Contributing
 
-```bash
-# using npm
-npm run android
+**We welcome contributions! Please fork the repository and submit a pull request.**
 
-# OR using Yarn
-yarn android
-```
+## License
 
-### For iOS
+**This project is licensed under the MIT License. See the LICENSE file for more details.**
 
-```bash
-# using npm
-npm run ios
+## Contact
 
-# OR using Yarn
-yarn ios
-```
+**For any questions or feedback, please contact us at harmanpreetsingh@programmer.net**
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+## Environment Variables (Required before Starting)
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
-
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+- **BACKEND_URL** (Communication link between App and Backend)
+- **AUTH_KEY** (Authorization key for Secure Frontend & Backend Communication)
+- **JWT_KEY** (JWT Key for Decryption and encryption)
+- **STRIPE_PUBLISHABLE_KEY** (Stripe Key for payment Gateway)
+- **STRIPE_ID** (Stripe Merchant ID)
