@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useMenu } from '../../helpers/MenuContext';
-import { TouchableOpacity, Animated } from 'react-native';
+import { Animated, Pressable } from 'react-native';
 import Wishlist from './Wishlist';
 
 const WishlistContainer = () => {
@@ -52,9 +52,9 @@ const WishlistContainer = () => {
 
     return (
         <>
-            <TouchableOpacity onPress={toggleFav} style={{ backgroundColor: overlayColor }} className={`${menu.fav ? 'absolute' : 'hidden'} top-0 left-0 h-full w-full z-50`}>
+            <Pressable onPress={toggleFav} style={{ backgroundColor: overlayColor }} className={`${menu.fav ? 'absolute' : 'hidden'} top-0 left-0 h-full w-full z-50`}>
                 <Animated.View style={{ backgroundColor, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} />
-            </TouchableOpacity>
+            </Pressable>
             <Animated.View
                 style={{
                     transform: [{ translateX: slideAnim }],

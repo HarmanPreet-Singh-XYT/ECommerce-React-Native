@@ -10,8 +10,7 @@ import { GoogleSignin,statusCodes } from '@react-native-google-signin/google-sig
 import * as Yup from 'yup';
 
 const SignIn = () => {
-  const clientID = process.env.FRONTEND_GOOGLE_CLIENT_ID as string;
-  GoogleSignin.configure();
+    GoogleSignin.configure();
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
     const [isChecked, setisChecked] = useState(false);
     const [enabled, setEnabled] = useState(false)

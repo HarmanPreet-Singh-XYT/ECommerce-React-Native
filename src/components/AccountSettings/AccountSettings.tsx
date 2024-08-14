@@ -5,6 +5,8 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import { userAddressDefaultHandler } from '../../api/userUpdate';
 import { setAddress } from '../../controllers/UserAccount';
 import AccountDialogs from './AccountDialogs';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 interface Address {
     addressID:number;
     addressType:string;
@@ -19,7 +21,7 @@ interface Address {
     is_default:boolean;
 };
 const AccountSettings = () => {
-    
+    const navigation = useNavigation<NativeStackNavigationProp<any>>();
     const [dialogType, setdialogType] = useState<null | string>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const defaultAccount = useAppSelector((state) => state.userState.defaultAccount)
@@ -128,29 +130,29 @@ const AccountSettings = () => {
                 <Text className='text-black text-xl font-bold'>Other Options</Text>
             </View>
             <View className='h-auto w-[90%] mx-auto border-customsalmon border-[1px] rounded-2xl mb-12'>
-                <TouchableOpacity className='flex-row px-4 py-3 justify-between'>
+                <TouchableOpacity onPress={()=>navigation.navigate('GiftCards')} className='flex-row px-4 py-3 justify-between'>
                     <Text className='text-lg font-bold text-customsalmon'>Available Gift Cards</Text>
                     <RightArrow/>
                 </TouchableOpacity>
                 <View className='w-full h-[1px] bg-customsalmon'></View>
-                <TouchableOpacity className='flex-row px-4 py-3 justify-between'>
+                <TouchableOpacity onPress={()=>navigation.navigate('Coupons')} className='flex-row px-4 py-3 justify-between'>
                     <Text className='text-lg font-bold text-customsalmon'>Available Coupons</Text>
                     <RightArrow/>
                 </TouchableOpacity>
                 <View className='w-full h-[1px] bg-customsalmon'></View>
-                <TouchableOpacity className='flex-row px-4 py-3 justify-between'>
+                <TouchableOpacity onPress={()=>navigation.navigate('Wishlist')} className='flex-row px-4 py-3 justify-between'>
                     <Text className='text-lg font-bold text-customsalmon'>My Wishlist</Text>
                     <RightArrow/>
                 </TouchableOpacity>
                 <View className='w-full h-[1px] bg-customsalmon'></View>
-                <TouchableOpacity className='flex-row px-4 py-3 justify-between'>
+                <TouchableOpacity onPress={()=>navigation.navigate('Support')} className='flex-row px-4 py-3 justify-between'>
                     <Text className='text-lg font-bold text-customsalmon'>Support</Text>
                     <RightArrow/>
                 </TouchableOpacity>
             </View>
             <View className='flex-row w-[90%] mx-auto mb-4'>
                 <TouchableOpacity onPress={()=>setdialogType('password')} className='bg-customsalmon w-[50%] justify-center rounded-l-xl'><Text className='text-white py-2 text-center font-bold text-lg'>Change Password</Text></TouchableOpacity>
-                <TouchableOpacity className='bg-white border-customsalmon border-[1px] w-[50%] justify-center rounded-r-xl'><Text className='text-black py-2 text-center font-bold text-lg'>App Settings</Text></TouchableOpacity>
+                <TouchableOpacity onPress={()=>navigation.navigate('AppSettings')} className='bg-white border-customsalmon border-[1px] w-[50%] justify-center rounded-r-xl'><Text className='text-black py-2 text-center font-bold text-lg'>App Settings</Text></TouchableOpacity>
             </View>
         </ScrollView>
     </View>

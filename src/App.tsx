@@ -17,6 +17,12 @@ import ProductCheckout from './components/Checkout/ProductCheckout';
 import Confirmation from './components/Confirmation/Confirmation';
 import CartCheckout from './components/Checkout/CartCheckout';
 import OrderSummary from './components/OrderSummary/OrderSummary';
+import Settings from './components/AccountSettings/Settings/Settings';
+import Wishlist from './components/AccountSettings/Wishlist/Wishlist';
+import AvailCoupons from './components/AccountSettings/AvailCoupons/AvailCoupons';
+import GiftCard from './components/AccountSettings/GiftCard/GiftCard';
+import Reviews from './components/Reviews/Reviews';
+import Support from './components/AccountSettings/Support/Support';
 const Stack = createNativeStackNavigator();
 interface Params {
   params:{productID:string};
@@ -75,6 +81,31 @@ const App = () => {
               }}/>
               <Stack.Screen name="OrderSummary" component={OrderSummary} options={{
                 headerTitle:'Order Summary',
+                headerTitleAlign:'center',
+                headerBackVisible:false
+              }}/>
+              <Stack.Screen name="GiftCards" component={GiftCard} options={{
+                headerLeft:()=><BackBtn/>,
+                headerTitle:'Gift Cards',
+              }}/>
+              <Stack.Screen name="Coupons" component={AvailCoupons} options={{
+                headerLeft:()=><BackBtn/>,
+                headerTitle:'Available Coupons',
+              }}/>
+              <Stack.Screen name="Wishlist" component={Wishlist} options={{
+                headerLeft:()=><BackBtn/>,
+                headerTitle:'My Wishlist',
+              }}/>
+              <Stack.Screen name="AppSettings" component={Settings} options={{
+                headerLeft:()=><BackBtn/>,
+                headerTitle:'Settings',
+              }}/>
+              <Stack.Screen name="Support" component={Support} options={{
+                headerLeft:()=><BackBtn/>,
+                headerTitle:'Support',
+              }}/>
+              <Stack.Screen name="Reviews" component={Reviews} options={{
+                headerTitle:'All Reviews',
                 headerTitleAlign:'center',
                 headerBackVisible:false
               }}/>

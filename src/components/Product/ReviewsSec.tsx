@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react'
 import Rating from '../Stars'
 import { useAppSelector } from '../../hooks';
 import formatDate from '../../api/dateConvert';
-import ConfirmationDialog from '../Dialogs/ConfirmationDialog';
-import { reviewDeleteHandler } from '../../api/reviews';
-import InfoDialog from '../Dialogs/InfoDialog';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
+import { useApp } from '../../helpers/AccountDialog';
 // Interface for individual reviews
 interface Review {
     reviewid: number;
@@ -17,14 +17,15 @@ interface Review {
     createdat:string;
     productstars:number;
 }
-const ReviewsSec = ({data,productID,reviewCount,setselectedReview,setdialogType}:{data:Review[],productID:number,reviewCount:number,setselectedReview:React.Dispatch<React.SetStateAction<Review|null>>,setdialogType:React.Dispatch<React.SetStateAction<null|string>>}) => {
-    
+const ReviewsSec = ({data,productID,reviewCount,setselectedReview,setdialogType,allReview=false}:{data:Review[],productID:number,reviewCount:number,setselectedReview:React.Dispatch<React.SetStateAction<Review|null>>,setdialogType:React.Dispatch<React.SetStateAction<null|string>>,allReview?:boolean}) => {
+    const navigation = useNavigation<NativeStackNavigationProp<any>>();
+    const { appState } = useApp();
+    const isLogged = appState.loggedIn;
     const [one, setone] = useState(0);
     const [two, settwo] = useState(0);
     const [three, setthree] = useState(0);
     const [four, setfour] = useState(0);
     const [five, setfive] = useState(0);
-    
     const defaultAccount = useAppSelector((state) => state.userState.defaultAccount)
     let stars:any = {one:0,two:0,three:0,four:0,five:0};
     function addStars (num:number){
@@ -89,7 +90,7 @@ const ReviewsSec = ({data,productID,reviewCount,setselectedReview,setdialogType}
                 <View className='h-[16px] min-w-[100%] relative border-customsalmon border-[1px] rounded-xl'></View>
                 <View style={{width:`${five}%`}} className='h-[16px] absolute bg-customsalmon rounded-xl'></View>
             </View>
-            <Text className='font-bold text-md text-black'>{stars.five}</Text>
+            <Text className='font-bold text-md text-black'>{five}</Text>
         </View>
         <View className='flex-row items-center justify-between '>
             <View className='flex-row items-center'><Text className='text-black font-bold text-md'>4</Text><Rating count={1} size={14} rating={1}/></View>
@@ -97,7 +98,7 @@ const ReviewsSec = ({data,productID,reviewCount,setselectedReview,setdialogType}
                 <View className='h-[16px] relative min-w-[100%] border-customsalmon border-[1px] rounded-xl'></View>
                 <View style={{width:`${four}%`}} className='h-[16px] absolute bg-customsalmon rounded-xl'></View>
             </View>
-            <Text className='font-bold text-md text-black'>{stars.four}</Text>
+            <Text className='font-bold text-md text-black'>{four}</Text>
         </View>
         <View className='flex-row items-center justify-between '>
             <View className='flex-row items-center'><Text className='text-black font-bold text-md'>3</Text><Rating count={1} size={14} rating={1}/></View>
@@ -105,7 +106,7 @@ const ReviewsSec = ({data,productID,reviewCount,setselectedReview,setdialogType}
                 <View className='h-[16px] relative min-w-[100%] border-customsalmon border-[1px] rounded-xl'></View>
                 <View style={{width:`${three}%`}} className='h-[16px] absolute bg-customsalmon rounded-xl'></View>
             </View>
-            <Text className='font-bold text-md text-black'>{stars.three}</Text>
+            <Text className='font-bold text-md text-black'>{three}</Text>
         </View>
         <View className='flex-row items-center justify-between '>
             <View className='flex-row items-center'><Text className='text-black font-bold text-md'>2</Text><Rating count={1} size={14} rating={1}/></View>
@@ -113,7 +114,7 @@ const ReviewsSec = ({data,productID,reviewCount,setselectedReview,setdialogType}
                 <View className='h-[16px] relative min-w-[100%] border-customsalmon border-[1px] rounded-xl'></View>
                 <View style={{width:`${two}%`}} className='h-[16px] absolute bg-customsalmon rounded-xl'></View>
             </View>
-            <Text className='font-bold text-md text-black'>{stars.two}</Text>
+            <Text className='font-bold text-md text-black'>{two}</Text>
         </View>
         <View className='flex-row items-center justify-between '>
             <View className='flex-row items-center'><Text className='text-black font-bold text-md'>1</Text><Rating count={1} size={14} rating={1}/></View>
@@ -121,7 +122,7 @@ const ReviewsSec = ({data,productID,reviewCount,setselectedReview,setdialogType}
                 <View className='h-[16px] relative min-w-[100%] border-customsalmon border-[1px] rounded-xl'></View>
                 <View style={{width:`${one}%`}} className='h-[16px] absolute bg-customsalmon rounded-xl'></View>
             </View>
-            <Text className='font-bold text-md text-black'>{stars.one}</Text>
+            <Text className='font-bold text-md text-black'>{one}</Text>
         </View>
       </View>
         <View className='h-[250px] rounded-2xl w-[100%] bg-customsalmon py-4 justify-between mb-8'>
@@ -140,8 +141,8 @@ const ReviewsSec = ({data,productID,reviewCount,setselectedReview,setdialogType}
                 </View>
             </View>
             <View className='mt-6'>
-                <TouchableOpacity onPress={()=>setdialogType('writeReview')} className='bg-white mb-3 w-[85%] mx-auto rounded-full h-[40px] justify-center'><Text className='text-customsalmon text-lg font-bold text-center'>Write A Review</Text></TouchableOpacity>
-                <TouchableOpacity className='bg-[#FF9C90] w-[50%] mx-auto rounded-full h-[40px] justify-center'><Text className='text-white font-bold text-center'>See All Reviews</Text></TouchableOpacity>
+                <TouchableOpacity onPress={()=>{isLogged ? setdialogType('writeReview') : navigation.navigate('Signin')}} className='bg-white mb-3 w-[85%] mx-auto rounded-full h-[40px] justify-center'><Text className='text-customsalmon text-lg font-bold text-center'>Write A Review</Text></TouchableOpacity>
+                {!allReview && <TouchableOpacity onPress={()=>navigation.navigate('Reviews',{productID})} className='bg-[#FF9C90] w-[50%] mx-auto rounded-full h-[40px] justify-center'><Text className='text-white font-bold text-center'>See All Reviews</Text></TouchableOpacity>}
             </View>
         </View>
         <View className='mb-8'>
@@ -161,7 +162,7 @@ const ReviewsSec = ({data,productID,reviewCount,setselectedReview,setdialogType}
                             {each.comment}
                         </Text>
                         <View className='flex-row justify-between mt-4'>
-                            {each.userid===defaultAccount.userID && <><TouchableOpacity onPress={()=>{setselectedReview(each);setdialogType('editReview')}} className='px-6 bg-customsalmon rounded-[10px] py-1'><Text className='font-bold text-md text-white'>Edit Review</Text></TouchableOpacity>
+                            {(isLogged && each.userid===defaultAccount.userID) && <><TouchableOpacity onPress={()=>{setselectedReview(each);setdialogType('editReview')}} className='px-6 bg-customsalmon rounded-[10px] py-1'><Text className='font-bold text-md text-white'>Edit Review</Text></TouchableOpacity>
                             <TouchableOpacity onPress={()=>{setselectedReview(each);setdialogType('deletePopup')}} className='px-6 rounded-[10px] border-customsalmon border-[1px] py-1'><Text className='font-bold text-md text-black'>Delete Review</Text></TouchableOpacity></>}
                         </View>
                     </View>)}

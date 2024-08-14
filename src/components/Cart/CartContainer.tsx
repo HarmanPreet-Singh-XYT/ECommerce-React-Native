@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useMenu } from '../../helpers/MenuContext';
-import { TouchableOpacity, Animated } from 'react-native';
+import { Animated, Pressable } from 'react-native';
 import Cart from '../Cart/Cart';
 
 const CartContainer = () => {
@@ -52,9 +52,9 @@ const CartContainer = () => {
 
     return (
         <>
-            <TouchableOpacity onPress={toggleCart} style={{ backgroundColor: overlayColor }} className={`${menu.cart ? 'absolute' : 'hidden'} top-0 left-0 h-full w-full z-50`}>
+            <Pressable onPress={toggleCart} style={{ backgroundColor: overlayColor }} className={`${menu.cart ? 'absolute' : 'hidden'} top-0 left-0 h-full w-full z-50`}>
                 <Animated.View style={{ backgroundColor, position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} />
-            </TouchableOpacity>
+            </Pressable>
             <Animated.View
                 style={{
                     transform: [{ translateX: slideAnim }],
