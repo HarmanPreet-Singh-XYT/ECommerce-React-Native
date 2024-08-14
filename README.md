@@ -2,8 +2,13 @@
 
 Welcome to the repository for our full stack eCommerce App built using the PERN stack (PostgreSQL, Express, React, Node.js) and React Native for this. This project demonstrates a comprehensive online shopping experience with a variety of features and pages.
 
-This App is small version of the web version of Ecommerce that can be found here: https://github.com/HarmanPreet-Singh-XYT/E-Commerce
-Web deployed version: https://harman-ecommerce.vercel.app/
+This App isa  small version of the web version of Ecommerce that can be found here: [FullStack Ecommerce Repo](https://github.com/HarmanPreet-Singh-XYT/E-Commerce)
+Web deployed version: [H-Comm](https://harman-ecommerce.vercel.app/)
+
+App Design can be found at [Figma](https://www.figma.com/design/hSBv5YXvrKNO03D1EU6Dt6/Projects?node-id=0-1&t=6J12OnNRo7M5PtZF-1)
+
+![Mobile1](/demo-images/demo1.png)
+![Mobile2](/demo-images/demo2.png)
 
 ## Features
 
@@ -40,6 +45,8 @@ Web deployed version: https://harman-ecommerce.vercel.app/
    npm install
 4. Set up environment variables in a .env file.
 
+This app uses custom React Native dependency for OAuth, you may have to follow this guide to get the app's oauth feature up and running, you can read docs here for more info - [React Native Google Signin](https://react-native-google-signin.github.io/)
+
 ## Running the Application (Development)
 
 1. Start the Server and ensure you have android emulator installed and prepared or physical device:
@@ -48,7 +55,7 @@ Web deployed version: https://harman-ecommerce.vercel.app/
 2. Select your device, Currently it has only been tested under Android Environment, you may find problems with dependencies that needs to be linked via Mac.
 3. The app will be automatically installed and built on your device and you'll be able to run it, don't forget to have your server running.
 
-For Backend server and its configuration, Visit here https://github.com/HarmanPreet-Singh-XYT/E-Commerce.
+For Backend server and its configuration, Visit here [FullStack Ecommerce Repo](https://github.com/HarmanPreet-Singh-XYT/E-Commerce)
 you'll find guide and server files not limited to backend but also web frontend of this app.
 
 ## Contributing
