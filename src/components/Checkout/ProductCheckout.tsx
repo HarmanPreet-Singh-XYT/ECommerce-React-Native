@@ -139,22 +139,22 @@ const ProductCheckout = ({navigation,route}:{navigation:any,route:any}) => {
             <Text className='text-black text-xl font-bold'>Delivery Details</Text>
         </View>
         <View className='w-[90%] mx-auto border-b-[1px] border-customsalmon pb-4'>
-        <Text className='text-lg font-bold text-black'>Your name</Text>
+        <Text className='text-md font-bold text-black'>Your name</Text>
             <TextInput readOnly value={defaultAccount.userName} placeholder={`Enter your Name`} placeholderTextColor={'#FFBCB5'} textContentType='name' className='bg-customsalmon mt-1 font-bold text-white w-[100%] rounded-xl h-[40px] px-6 mx-auto'/>
-            <Text className='text-lg font-bold text-black mt-2'>your Email*</Text>
+            <Text className='text-md font-bold text-black mt-2'>your Email*</Text>
             <TextInput readOnly value={defaultAccount.email} inputMode='email' placeholder={`Enter your Email`} textContentType='emailAddress' placeholderTextColor={'#FFBCB5'} className='bg-customsalmon mt-1 font-bold text-white w-[100%] rounded-xl h-[40px] px-6 mx-auto'/>
-            <Text className='text-lg font-bold text-black mt-2'>Country*</Text>
+            <Text className='text-md font-bold text-black mt-2'>Country*</Text>
             <TextInput readOnly value={DefaultAddress.country} placeholder={`Enter your Country`} placeholderTextColor={'#FFBCB5'} textContentType='countryName' className='bg-customsalmon mt-1 font-bold text-white w-[100%] rounded-xl h-[40px] px-6 mx-auto'/>
-            <Text className='text-lg font-bold text-black mt-2'>City*</Text>
+            <Text className='text-md font-bold text-black mt-2'>City*</Text>
             <TextInput readOnly value={DefaultAddress.city} placeholder={`Enter your City`} placeholderTextColor={'#FFBCB5'} className='bg-customsalmon mt-1 font-bold text-white w-[100%] rounded-xl h-[40px] px-6 mx-auto'/>
-            <Text className='text-lg font-bold text-black mt-2'>Phone Number*</Text>
+            <Text className='text-md font-bold text-black mt-2'>Phone Number*</Text>
             <View className='flex-row items-center h-[40px] mt-1'><TextInput readOnly value='+91' textAlignVertical='center' textAlign='center' className='font-bold text-white w-[15%] h-[40px] bg-[#FFBCB5] rounded-l-xl'/>
             <TextInput value={defaultAccount.mobile_number.toString()} placeholder={`Enter your Phone Number`} placeholderTextColor={'#FFBCB5'} inputMode='tel' textContentType='telephoneNumber' className='bg-customsalmon font-bold text-white w-[85%] rounded-r-xl h-[40px] px-6 mx-auto'/></View>
-            <Text className='text-lg font-bold text-black mt-2'>Pin Code</Text>
+            <Text className='text-md font-bold text-black mt-2'>Pin Code</Text>
             <TextInput value={DefaultAddress.postalCode} readOnly placeholder={`Enter your Pin Code`} placeholderTextColor={'#FFBCB5'} inputMode='numeric' textContentType='postalCode' className='bg-customsalmon mt-1 font-bold text-white w-[100%] rounded-xl h-[40px] px-6 mx-auto'/>
-            <Text className='text-lg font-bold text-black mt-2'>Address 1</Text>
+            <Text className='text-md font-bold text-black mt-2'>Address 1</Text>
             <TextInput value={DefaultAddress.addressLine1} readOnly placeholder={`Enter your Address`} placeholderTextColor={'#FFBCB5'} textContentType='streetAddressLine1' className='bg-customsalmon mt-1 font-bold text-white w-[100%] rounded-xl h-[40px] px-6 mx-auto'/>
-            <Text className='text-lg font-bold text-black mt-2'>Address 2</Text>
+            <Text className='text-md font-bold text-black mt-2'>Address 2</Text>
             <TextInput value={DefaultAddress.addressLine2} readOnly placeholder={`Enter your Address`} inputMode='numeric' placeholderTextColor={'#FFBCB5'} textContentType='streetAddressLine2' className='bg-customsalmon mt-1 font-bold text-white w-[100%] rounded-xl h-[40px] px-6 mx-auto'/>
         </View>
         <View className='mb-4 mt-2'>
