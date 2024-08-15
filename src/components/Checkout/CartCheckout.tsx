@@ -43,7 +43,7 @@ const CartCheckout = ({navigation,route}:{navigation:any,route:any}) => {
     const [paymentCharge, setPaymentCharge] = useState(0);
     const found = useRef(false);
     const [loading, setloading] = useState(true);
-    const shipping = data.reduce((sum, item) => (sum + item.shippingcost)*item.quantity, 0);
+    const shipping = data.reduce((sum, item) => (sum + (item.shippingcost*item.quantity)), 0);
     const taxes = data.reduce((sum, item) => sum + (parseFloat(item.price) * (18 / 100))*item.quantity, 0);
     const subTotal = data.reduce((sum, item) => sum + parseFloat(item.price)*item.quantity, 0);
     const subTotalWithoutTax = data.reduce((sum, item) => sum + (parseFloat(item.price)-(parseFloat(item.price)*18/100))*item.quantity, 0);
@@ -175,7 +175,7 @@ const CartCheckout = ({navigation,route}:{navigation:any,route:any}) => {
                 <Text className='text-customsalmon font-bold'>{each.title}</Text>
                 <Text className='font-bold text-black'>Size: <Text className='font-medium text-customsalmon'>{each.sizename}</Text></Text>
                 <Text className='font-bold text-black'>Color: <Text className='font-medium text-customsalmon'>{each.colorname}</Text></Text>
-                <Text className='font-bold text-black'>Quantity: <Text className='font-medium text-customsalmon'>1</Text></Text>
+                <Text className='font-bold text-black'>Quantity: <Text className='font-medium text-customsalmon'>{each.quantity}</Text></Text>
                 <View className='flex-row justify-between items-center'>
                     <Rating rating={5} size={16}/>
                     <Text className='font-bold line-through text-black'>${each.price}</Text>
