@@ -4,7 +4,7 @@ import { Google } from '../NativeSVG'
 import Checkbox from '../Checkbox'
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types'
-import { Formik,ErrorMessage } from 'formik'
+import { Formik } from 'formik'
 import useAuth from '../../controllers/Authentication'
 import { GoogleSignin,statusCodes } from '@react-native-google-signin/google-signin';
 import * as Yup from 'yup';

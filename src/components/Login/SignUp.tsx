@@ -83,6 +83,7 @@ const SignUp = () => {
       {appState.isOpenAgreement && <ConfirmationDialog title='Agreement' message='By Agreeing, you agree to H-Comm Terms & Conditions and Privacy Policy.' btn1='Cancel' btn2='Agree' btn1Func={toggleIsOpenAgreement} btn2Func={toggleAgreementLocal}/>}
       {appState.serverError && <InfoDialog title='Server Error' message='We are currently facing downtime, please try again lator.' btn='Close' btnFunc={toggleServerError}/>}
       {appState.isExists && <InfoDialog title='Already Exists' message='An Account with same Email or Contact Number already exists.' btn='Close' btnFunc={toggleIsExists}/>}
+      {appState.isPassword && <InfoDialog title='Password Mismatch' message='The Password does not match with re-entered password.' btn='Close' btnFunc={toggleIsPassword}/>}
       <ScrollView className='w-[100%] h-[100%]'>
         <View className='flex-row w-[90%] mx-auto mb-6 mt-4'>
           <Text className='text-black text-xl font-bold'>Create new account</Text>
