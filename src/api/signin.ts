@@ -20,7 +20,6 @@ export default async function signInHandler({email,password,remember}:{email:str
     try {
       await AsyncStorage.setItem('sessionhold', response.data.token);
     } catch (error) {
-      return {status:500};
     }
     // if(remember){
     //   cookies().set({

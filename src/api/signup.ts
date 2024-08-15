@@ -25,7 +25,10 @@ export default async function signUpHandler({ userName, email, password, mobile_
     const response = await axios.post(`${url}/api/user/signup/${promotional}`, { userName, email, password, mobile_number, dob }, {
       headers: { authorization:`Bearer ${sendingKey}` },
     });
-    await AsyncStorage.setItem('sessionhold', response.data.token);
+    try {
+      await AsyncStorage.setItem('sessionhold', response.data.token);
+    } catch (error) {
+    }
     // cookies().set({
     //   name: 'sessionhold',
     //   value: response.data.token,
