@@ -148,8 +148,8 @@ const ReviewsSec = ({data,productID,reviewCount,setselectedReview,setdialogType,
         <View className='mb-8'>
             <Text className='text-xl text-black font-bold mb-4'>Recent Reviews</Text>
             <View>
-                <View className='border-[1px] border-customsalmon rounded-xl'>
-                    {data.map((each)=><View key={each.reviewid} className='w-[92%] mx-auto py-4'>
+            {data.map((each)=><View key={each.reviewid} className='border-[1px] mb-4 border-customsalmon rounded-xl'>
+                    <View className='w-[92%] mb-2 mx-auto py-4'>
                         <View className='flex-row justify-between items-center'>
                             <Text className='text-lg text-black font-bold'>@{each.username}</Text>
                             <Rating rating={each.productstars} size={16}/>
@@ -165,8 +165,8 @@ const ReviewsSec = ({data,productID,reviewCount,setselectedReview,setdialogType,
                             {(isLogged && each.userid===defaultAccount.userID) && <><TouchableOpacity onPress={()=>{setselectedReview(each);setdialogType('editReview')}} className='px-6 bg-customsalmon rounded-[10px] py-1'><Text className='font-bold text-md text-white'>Edit Review</Text></TouchableOpacity>
                             <TouchableOpacity onPress={()=>{setselectedReview(each);setdialogType('deletePopup')}} className='px-6 rounded-[10px] border-customsalmon border-[1px] py-1'><Text className='font-bold text-md text-black'>Delete Review</Text></TouchableOpacity></>}
                         </View>
-                    </View>)}
-                </View>
+                    </View>
+                </View>)}
             </View>
         </View>
     </View>

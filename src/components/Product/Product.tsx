@@ -117,7 +117,7 @@ const Product = ({navigation,route}:{navigation:any,route:any}) => {
     const [selectedImage, setselectedImage] = useState({imgLink:'',imgAlt:''});
     const [quantity, setQuantity] = useState<number>(1);
     const [dataChecked, setdataChecked] = useState<boolean>(false);
-    const [loading, setloading] = useState<boolean>(false);
+    const [loading, setloading] = useState<boolean>(true);
     const [processLoading, setprocessLoading] = useState(false);
     const [dialogType, setdialogType] = useState<null|string>(null)
     const dispatch = useAppDispatch();
@@ -155,7 +155,6 @@ const Product = ({navigation,route}:{navigation:any,route:any}) => {
         break;
         case 500:
           found.current = false;
-          setdataChecked(true);
           break;
         }
       }
@@ -169,6 +168,7 @@ const Product = ({navigation,route}:{navigation:any,route:any}) => {
           cartItemData.productSize = data.sizes[0].sizename;
         }
         setVariableSetup(true);
+        setloading(false);
       }
     };
     async function dataInitializer(){

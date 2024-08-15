@@ -105,7 +105,7 @@ const AccountSettings = () => {
             </View>
             <View className='w-[90%] mx-auto'>
                 {addresses.map((each)=>
-                    <View key={each.addressID} className='w-[100%] min-h-[150px] border-customsalmon border-[1px] rounded-2xl py-2 px-2'>
+                    <View key={each.addressID} className='w-[100%] min-h-[150px] border-customsalmon border-[1px] mb-2 rounded-2xl py-2 px-2'>
                         <View className='justify-between flex-row items-center'>
                             <View className='bg-customsalmon w-[60px] rounded-lg'><Text className='px-1 py-1 text-white font-bold text-center'>{each.addressType}</Text></View>
                             <TouchableOpacity disabled={each.is_default} style={{backgroundColor:each.is_default ? 'salmon' : '#FFBCB5'}} onPress={()=>changeDefault(each.addressID,defaultAccount.userID)} className='w-[75px] rounded-lg'><Text className='px-1 py-1 text-white font-bold text-center'>Default</Text></TouchableOpacity>

@@ -34,6 +34,8 @@ local.properties
 *.keystore
 !debug.keystore
 android/app/google-services.json
+android/app/my-upload-key.keystore
+
 # node.js
 #
 node_modules/

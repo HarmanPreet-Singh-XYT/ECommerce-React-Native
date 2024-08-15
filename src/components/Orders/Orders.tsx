@@ -6,6 +6,7 @@ import { ordersHandler } from '../../api/orders'
 import formatDate from '../../api/dateConvert'
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
+import Loading from '../Dialogs/Loading'
 interface orderDataflow{
     orderid:number;
     totalamount:number;
@@ -56,6 +57,7 @@ const Orders = () => {
     }, []);
   return (
     <View className='bg-white h-[100%] w-[100%] border-t-[1px] border-customsalmon'>
+        {loading && <Loading/>}
         <ScrollView className='w-[100%] h-[100%]'>
             <View className='flex-row w-[90%] mx-auto mb-6 mt-4'>
                 <Text className='text-black text-xl font-bold'>Order history</Text>

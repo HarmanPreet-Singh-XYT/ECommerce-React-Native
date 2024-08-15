@@ -9,6 +9,9 @@ import { Formik,ErrorMessage } from 'formik'
 import useAuth from '../../controllers/Authentication'
 import { useApp } from '../../helpers/AccountDialog'
 import * as Yup from 'yup';
+import InfoDialog from '../Dialogs/InfoDialog'
+import ConfirmationDialog from '../Dialogs/ConfirmationDialog'
+import Loading from '../Dialogs/Loading'
 
 interface date{
   dateString:string;
@@ -31,9 +34,8 @@ const SignUp = () => {
     function toggleCalendar(){
       setUIState({...UIState,calendar:!UIState.calendar});
     };
-    const [updates, setUpdates] = useState(false);
     const {registerUser} = useAuth();
-    const {toggleAgreement, toggleIsPassword, toggleIsOpenAgreement} = useApp();
+    const {toggleAgreement, toggleIsPassword, toggleIsOpenAgreement, appState,toggleServerError, toggleIsExists} = useApp();
     const [loading, setloading] = useState(false)
     async function register(e:any,agreement:boolean,promotion:boolean) {
         const data = {
@@ -70,8 +72,17 @@ const SignUp = () => {
         .length(10, 'Mobile number must be exactly 10 digits')
         .required('Mobile Number Required'),
     });
+    function toggleAgreementLocal(){
+      setisChecked({...isChecked,termsConditons:true});
+      toggleAgreement();
+      toggleIsOpenAgreement();
+    }
   return (
     <View className='bg-white h-[100%] w-[100%] border-t-[1px] border-customsalmon'>
+      {loading && <Loading/>}
+      {appState.isOpenAgreement && <ConfirmationDialog title='Agreement' message='By Agreeing, you agree to H-Comm Terms & Conditions and Privacy Policy.' btn1='Cancel' btn2='Agree' btn1Func={toggleIsOpenAgreement} btn2Func={toggleAgreementLocal}/>}
+      {appState.serverError && <InfoDialog title='Server Error' message='We are currently facing downtime, please try again lator.' btn='Close' btnFunc={toggleServerError}/>}
+      {appState.isExists && <InfoDialog title='Already Exists' message='An Account with same Email or Contact Number already exists.' btn='Close' btnFunc={toggleIsExists}/>}
       <ScrollView className='w-[100%] h-[100%]'>
         <View className='flex-row w-[90%] mx-auto mb-6 mt-4'>
           <Text className='text-black text-xl font-bold'>Create new account</Text>

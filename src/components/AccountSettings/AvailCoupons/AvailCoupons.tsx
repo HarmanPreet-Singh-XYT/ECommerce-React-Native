@@ -1,19 +1,29 @@
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { useAppSelector } from '../../../hooks'
 import formatDate from '../../../api/dateConvert'
-
+import Clipboard from '@react-native-clipboard/clipboard';
+import InfoDialog from '../../Dialogs/InfoDialog';
 const AvailCoupons = () => {
+  const [copiedText, setcopiedText] = useState<null|string>(null);
+  const copyText = (text:string)=>{
+    Clipboard.setString(text);
+    setcopiedText(text);
+  };
+  function toggleClipboard(){
+    setcopiedText(null);
+  };
   const coupons = useAppSelector((state) => state.userState.coupons)
   return (
     <View className='bg-white h-[100%] w-[100%] border-t-[1px] border-customsalmon'>
+      {copiedText!=null && <InfoDialog title='Code Copied' message='Coupon Code has been copied to clipboard.' btn='Close' btnFunc={toggleClipboard}/>}
       <View className='w-[100%] h-[100%]'>
         <View className='self-center w-[90%] my-4'>
           <Text className='text-black text-xl font-bold'>Available Coupons</Text>
         </View>
         <ScrollView>
           {coupons.map((each)=>
-          <TouchableOpacity key={each.couponid} className='w-[90%] mb-4 self-center bg-customsalmon rounded-xl px-4 py-4 min-h-[120px]'>
+          <TouchableOpacity onLongPress={()=>copyText(each.code)} key={each.couponid} className='w-[90%] mb-4 self-center bg-customsalmon rounded-xl px-4 py-4 min-h-[120px]'>
             <View className='flex-row justify-between items-center'>
               <View className='bg-white rounded-xl px-1 py-1 w-auto'><Text className='text-[#4ADE80] self-center font-bold'>Upto ${each.maxdiscountamount}/{each.discountpercentage}%</Text></View>
               <Text className='text-[12px] text-[#FFBCB5]'>Valid till {formatDate(each.validuntil)}</Text>

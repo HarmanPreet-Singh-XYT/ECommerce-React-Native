@@ -8,14 +8,17 @@ import { Formik,ErrorMessage } from 'formik'
 import useAuth from '../../controllers/Authentication'
 import { GoogleSignin,statusCodes } from '@react-native-google-signin/google-signin';
 import * as Yup from 'yup';
+import { useApp } from '../../helpers/AccountDialog'
+import InfoDialog from '../Dialogs/InfoDialog'
+import Loading from '../Dialogs/Loading'
 
 const SignIn = () => {
     GoogleSignin.configure();
     const navigation = useNavigation<NativeStackNavigationProp<any>>();
     const [isChecked, setisChecked] = useState(false);
-    const [enabled, setEnabled] = useState(false)
     const {checkLogin, checkAuthLogin} = useAuth();
-    const [State, setState] = useState<any>({});
+    const { toggleIsIncorrect, toggleServerError, appState } = useApp();
+    // const [State, setState] = useState<any>({});
     const [loading, setloading] = useState(false);
     async function login(e:any,remember:boolean){
         setloading(true);
@@ -41,7 +44,7 @@ const SignIn = () => {
       try {
         await GoogleSignin.hasPlayServices();
         const userInfo = await GoogleSignin.signIn();
-        setState({ userInfo, error: undefined });
+        // setState({ userInfo, error: undefined });
         responseGoogle(userInfo.user);
       } catch (error) {
         if (error) {
@@ -76,6 +79,10 @@ const SignIn = () => {
     });
   return (
     <View className='bg-white h-[100%] w-[100%] border-t-[1px] border-customsalmon'>
+      {loading && <Loading/>}
+      {appState.serverError && <InfoDialog title='Server Error' message='We are currently facing downtime, please try again lator.' btn='Close' btnFunc={toggleServerError}/>}
+      {appState.isIncorrect && <InfoDialog title='Incorrect' message='Email or Password is incorrect, please check again and try.' btn='Close' btnFunc={toggleIsIncorrect}/>}
+      
       <ScrollView className='w-[100%] h-[100%]'>
         <View className='flex-row gap-2 w-[90%] mx-auto mt-2'>
           <Text className='text-black text-2xl font-bold'>Welcome Back</Text>
@@ -116,7 +123,7 @@ const SignIn = () => {
               </TouchableOpacity>
           </View>
           <TouchableOpacity disabled={loading} onPress={()=>handleSubmit()} className='w-[85%] mx-auto h-[60px] justify-center rounded-2xl bg-customsalmon'>
-              <Text className='text-lg font-semibold text-white text-center'>{loading ? <View className='w-[100%] items-center'><ActivityIndicator size={32} color={'white'}/></View> : 'Sign in to your account'}</Text>
+              <Text className='text-lg font-semibold text-white text-center'>{loading ? <View className='w-[100%] items-center justify-center'><ActivityIndicator size={32} color={'white'}/></View> : 'Sign in to your account'}</Text>
           </TouchableOpacity>
           <View className='flex-row w-[90%] mx-auto my-8'>
               <Text className='text-md text-customsalmon mr-2'>Don't have an account yet?</Text>
