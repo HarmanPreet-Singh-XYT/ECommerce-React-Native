@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './components/Home/Home';
@@ -23,11 +23,12 @@ import AvailCoupons from './components/AccountSettings/AvailCoupons/AvailCoupons
 import GiftCard from './components/AccountSettings/GiftCard/GiftCard';
 import Reviews from './components/Reviews/Reviews';
 import Support from './components/AccountSettings/Support/Support';
+import Orientation from 'react-native-orientation-locker';
 const Stack = createNativeStackNavigator();
-interface Params {
-  params:{productID:string};
-}
 const App = () => {
+  useEffect(() => {
+    Orientation.lockToPortrait();
+  }, [])
   return (
     <Provider store={store}>
       <MenuProvider>
